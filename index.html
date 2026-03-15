@@ -14,63 +14,119 @@ h1,h2,h3,h4,h5,h6{font-family:'Cinzel',serif}
 .tg{color:#d4af37}
 .gold-grad{background:linear-gradient(to right,#aa8c2c,#d4af37,#f3e5ab,#d4af37,#aa8c2c);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% auto;animation:shine 4s linear infinite}
 @keyframes shine{to{background-position:200% center}}
-.gold-btn{display:inline-block;background:linear-gradient(90deg,#aa8c2c,#d4af37);color:#000;font-weight:700;text-decoration:none;text-align:center;cursor:pointer;border:none}
-.gold-border{border:1px solid rgba(212,175,55,.2)}
+.gold-btn{display:inline-block;background:linear-gradient(90deg,#aa8c2c,#d4af37);color:#000;font-weight:700;text-decoration:none;text-align:center;cursor:pointer;border:none;position:relative;overflow:hidden}
+.gold-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transition:.6s}
+.gold-btn:hover::after{left:100%}
+.gold-btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(212,175,55,.2)}
 
-#loader{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .8s,visibility .8s}
+/* Loader — more cinematic */
+#loader{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 1s,visibility 1s}
 #loader.done{opacity:0;visibility:hidden;pointer-events:none}
-#loader-line{width:0;height:1px;background:#d4af37;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
-#loader-line.go{width:280px}
-#loader-text{margin-top:24px;font-family:'Cinzel',serif;font-size:28px;letter-spacing:.4em;color:#d4af37;opacity:0;transition:opacity .6s ease .5s}
-#loader-text.go{opacity:1}
-#loader-sub{margin-top:8px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:#444;text-transform:uppercase;opacity:0;transition:opacity .4s ease 1s}
+#loader-line{width:0;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent);transition:width 1.5s cubic-bezier(.22,1,.36,1)}
+#loader-line.go{width:320px}
+#loader-text{margin-top:32px;font-family:'Cinzel',serif;font-size:32px;letter-spacing:.5em;color:#d4af37;opacity:0;transform:translateY(10px);transition:opacity .8s ease .6s,transform .8s ease .6s}
+#loader-text.go{opacity:1;transform:translateY(0)}
+#loader-sub{margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:#333;text-transform:uppercase;opacity:0;transition:opacity .5s ease 1.2s}
 #loader-sub.go{opacity:1}
+#loader-ver{margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.2em;color:#1a1a1a;opacity:0;transition:opacity .4s ease 1.6s}
+#loader-ver.go{opacity:1}
 
-.marquee-wrap{overflow:hidden}
-.marquee-inner{display:flex;white-space:nowrap;animation:marq 50s linear infinite}
+/* Data Rain Canvas */
+#rain-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:-1;opacity:.035}
+
+/* Pulse Line */
+#pulse-canvas{position:fixed;bottom:0;left:0;width:100vw;height:3px;pointer-events:none;z-index:9990}
+
+/* Film Grain */
+#grain{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9989;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Glow cards — cursor follow */
+.glow-card{position:relative;overflow:hidden;transition:border-color .5s,transform .4s,box-shadow .4s}
+.glow-card:hover{border-color:rgba(212,175,55,.3)!important;transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 30px rgba(212,175,55,.03)}
+.glow-card .glow-follow{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(212,175,55,.08) 0%,transparent 70%);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .4s}
+.glow-card:hover .glow-follow{opacity:1}
+
+/* Encrypted reveal */
+.encrypted{font-family:'Share Tech Mono',monospace}
+
+/* Reveal animation */
+.rv{opacity:0;transform:translateY(50px);transition:all 1.4s cubic-bezier(.16,1,.3,1)}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* Scroll marker */
+#scroll-marker{position:fixed;right:24px;top:50%;font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(212,175,55,.2);letter-spacing:.15em;writing-mode:vertical-rl;z-index:50;pointer-events:none;opacity:0;transition:opacity .8s}
+
+/* Marquee */
+.mq-inner{display:flex;white-space:nowrap;animation:marq 50s linear infinite}
 @keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-.encrypted{font-family:'Share Tech Mono',monospace}
-.reveal-el{opacity:0;transform:translateY(30px);transition:all 1s cubic-bezier(.16,1,.3,1)}
-.reveal-el.vis{opacity:1;transform:translateY(0)}
+/* Hover link effect */
+.hover-link{position:relative;display:inline-block}
+.hover-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:#d4af37;transition:width .3s}
+.hover-link:hover::after{width:100%}
 
-.glow-card{position:relative;overflow:hidden;transition:border-color .5s}
-.glow-card:hover{border-color:rgba(212,175,55,.3) !important}
+/* Smooth borders on hover */
+.border-glow{transition:border-color .5s,box-shadow .5s}
+.border-glow:hover{border-color:rgba(212,175,55,.2)!important;box-shadow:0 0 20px rgba(212,175,55,.03)}
 
-#scroll-marker{position:fixed;right:20px;top:50%;font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(212,175,55,.15);letter-spacing:.15em;writing-mode:vertical-rl;z-index:50;pointer-events:none;opacity:0;transition:opacity .5s}
+/* Hero particles canvas */
+#hero-particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 
-#cmd-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,.85);backdrop-filter:blur(20px);display:none;padding-top:20vh;justify-content:center;align-items:flex-start}
-#cmd-overlay.open{display:flex}
-#cmd-box{width:90%;max-width:600px;background:#0a0a0a;border:1px solid rgba(212,175,55,.3)}
-#cmd-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.05);color:#fff;font-family:'Share Tech Mono',monospace;font-size:16px;padding:20px 24px;outline:none}
-.cmd-row{padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.cmd-row:hover{background:rgba(212,175,55,.05)}
+/* Scroll progress at very top */
+#scroll-progress{position:fixed;top:0;left:0;height:1px;background:linear-gradient(90deg,#d4af37,#f3e5ab);z-index:101;transition:width .1s;width:0}
 
+/* CMD+K */
+#cmd-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,.9);backdrop-filter:blur(30px);display:none;padding-top:18vh;justify-content:center;align-items:flex-start;opacity:0;transition:opacity .2s}
+#cmd-overlay.open{display:flex;opacity:1}
+#cmd-box{width:90%;max-width:580px;background:#0a0a0a;border:1px solid rgba(212,175,55,.25);box-shadow:0 60px 120px rgba(0,0,0,.9),0 0 80px rgba(212,175,55,.03);transform:translateY(10px);transition:transform .3s}
+#cmd-overlay.open #cmd-box{transform:translateY(0)}
+#cmd-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.05);color:#fff;font-family:'Share Tech Mono',monospace;font-size:16px;padding:24px;outline:none}
+.cmd-row{padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s}
+.cmd-row:hover{background:rgba(212,175,55,.04);padding-left:20px}
+
+/* Steps */
 .assess-step{display:none}
-.assess-step.active{display:block}
-.step-choice{cursor:pointer;border:1px solid rgba(255,255,255,.08);padding:14px 18px;background:rgba(5,5,5,.9);transition:all .3s}
-.step-choice:hover,.step-choice.picked{border-color:#d4af37;background:rgba(212,175,55,.03)}
+.assess-step.active{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.step-choice{cursor:pointer;border:1px solid rgba(255,255,255,.06);padding:16px 20px;background:rgba(5,5,5,.9);transition:all .3s}
+.step-choice:hover{border-color:rgba(212,175,55,.4);background:rgba(212,175,55,.03);transform:translateY(-1px)}
+.step-choice.picked{border-color:#d4af37;background:rgba(212,175,55,.05)}
 .step-choice.picked::after{content:'✓';float:right;color:#d4af37;font-weight:bold}
 
 .spin{border:2px solid rgba(212,175,55,.2);border-left-color:#d4af37;border-radius:50%;width:16px;height:16px;animation:sp 1s linear infinite;display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-#mob-nav{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:200;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+/* Mobile */
+#mob-nav{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:200;transform:translateX(100%);transition:transform .4s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
 #mob-nav.open{transform:translateX(0)}
 
 #login-box{position:fixed;top:0;left:0;right:0;bottom:0;z-index:150;background:rgba(0,0,0,.95);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center}
 #login-box.open{display:flex}
 
-::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:#000}
-::-webkit-scrollbar-thumb{background:#222}
+::-webkit-scrollbar-thumb{background:#1a1a1a}
 ::-webkit-scrollbar-thumb:hover{background:#d4af37}
+
+@media(max-width:1024px){#desk-nav{display:none!important}#mob-btn{display:block!important}}
+@media(max-width:768px){.grid-3{grid-template-columns:1fr!important}.grid-4{grid-template-columns:repeat(2,1fr)!important}.grid-5{grid-template-columns:repeat(2,1fr)!important}.flex-cap{flex-direction:column!important}.cap-right{min-width:0!important}}
 </style>
 </head>
 <body>
 
 <!-- LOADER -->
-<div id="loader"><div id="loader-line"></div><div id="loader-text">CRYPVOREX</div><div id="loader-sub">Strategic Intelligence Systems</div></div>
+<div id="loader">
+<div id="loader-line"></div>
+<div id="loader-text">CRYPVOREX</div>
+<div id="loader-sub">Strategic Intelligence Systems</div>
+<div id="loader-ver">SYS_INIT v4.2 // ESTABLISHING SECURE CONNECTION</div>
+</div>
+
+<!-- AMBIENT LAYERS (all z-index negative or very high, pointer-events none) -->
+<canvas id="rain-canvas"></canvas>
+<canvas id="pulse-canvas"></canvas>
+<div id="grain"></div>
+<div id="scroll-progress"></div>
 
 <!-- SCROLL MARKER -->
 <div id="scroll-marker"></div>
@@ -78,59 +134,60 @@ h1,h2,h3,h4,h5,h6{font-family:'Cinzel',serif}
 <!-- CMD+K -->
 <div id="cmd-overlay">
 <div id="cmd-box">
-<input id="cmd-input" type="text" placeholder="Search markets, capabilities..." autocomplete="off">
-<div id="cmd-results" style="padding:12px">
-<div class="cmd-row" onclick="location.href='capabilities.html'"><span style="color:#999;font-size:12px">Capabilities</span><span class="fm" style="color:#555;font-size:10px">PAGE</span></div>
-<div class="cmd-row" onclick="location.href='industries.html'"><span style="color:#999;font-size:12px">Industries</span><span class="fm" style="color:#555;font-size:10px">PAGE</span></div>
-<div class="cmd-row" onclick="location.href='insights.html'"><span style="color:#999;font-size:12px">Insights</span><span class="fm" style="color:#555;font-size:10px">PAGE</span></div>
-<div class="cmd-row" onclick="location.href='about.html'"><span style="color:#999;font-size:12px">About</span><span class="fm" style="color:#555;font-size:10px">PAGE</span></div>
-<div class="cmd-row" onclick="location.href='founder.html'"><span style="color:#999;font-size:12px">Founder</span><span class="fm" style="color:#555;font-size:10px">PROFILE</span></div>
-<div class="cmd-row" onclick="location.href='careers.html'"><span style="color:#999;font-size:12px">Careers</span><span class="fm" style="color:#555;font-size:10px">HIRING</span></div>
-<div style="padding:8px 12px;border-top:1px solid rgba(255,255,255,.05);margin-top:8px"><p class="fm" style="font-size:10px;color:#444">Type "BTC", "DeFi", "thesis" for AI</p></div>
+<input id="cmd-input" type="text" placeholder="Search intelligence, markets, capabilities..." autocomplete="off">
+<div style="padding:8px">
+<div class="cmd-row" onclick="location.href='capabilities.html'"><span style="color:#888;font-size:12px">Capabilities</span><span class="fm" style="color:#444;font-size:9px">NAVIGATE</span></div>
+<div class="cmd-row" onclick="location.href='industries.html'"><span style="color:#888;font-size:12px">Industries</span><span class="fm" style="color:#444;font-size:9px">NAVIGATE</span></div>
+<div class="cmd-row" onclick="location.href='insights.html'"><span style="color:#888;font-size:12px">Insights & Research</span><span class="fm" style="color:#444;font-size:9px">NAVIGATE</span></div>
+<div class="cmd-row" onclick="location.href='about.html'"><span style="color:#888;font-size:12px">About Crypvorex</span><span class="fm" style="color:#444;font-size:9px">NAVIGATE</span></div>
+<div class="cmd-row" onclick="location.href='founder.html'"><span style="color:#888;font-size:12px">Founder — Aswath Karthikeyan</span><span class="fm" style="color:#444;font-size:9px">PROFILE</span></div>
+<div class="cmd-row" onclick="location.href='careers.html'"><span style="color:#888;font-size:12px">Careers — Open Positions</span><span class="fm" style="color:#444;font-size:9px">HIRING</span></div>
+<div class="cmd-row" onclick="document.querySelector('#assessment').scrollIntoView({behavior:'smooth'});closeCmd()"><span style="color:#d4af37;font-size:12px">⚡ Strategic Assessment</span><span class="fm" style="color:#444;font-size:9px">AI TOOL</span></div>
+<div style="padding:8px 12px;border-top:1px solid rgba(255,255,255,.03);margin-top:4px"><p class="fm" style="font-size:9px;color:#333">TYPE: "BTC" "ETH" "DeFi" "thesis" "tokenomics" for live AI intelligence</p></div>
 </div>
-<div id="cmd-ai-box" style="display:none;padding:16px;border-top:1px solid rgba(212,175,55,.15);background:rgba(212,175,55,.02)">
-<p class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:4px">Intelligence Engine</p>
-<p id="cmd-ai-out" style="color:#ccc;font-size:12px;line-height:1.6"></p>
+<div id="cmd-ai-box" style="display:none;padding:20px;border-top:1px solid rgba(212,175,55,.12);background:rgba(212,175,55,.015)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="width:4px;height:4px;border-radius:50%;background:#d4af37"></span><span class="fm tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.2em;font-weight:700">Intelligence Engine</span></div>
+<p id="cmd-ai-out" style="color:#bbb;font-size:12px;line-height:1.7"></p>
 </div>
 </div>
 </div>
 
 <!-- LOGIN -->
 <div id="login-box">
-<div style="background:#0a0a0a;border:1px solid rgba(212,175,55,.2);padding:40px;max-width:420px;width:90%;position:relative">
-<button id="login-close" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#666;cursor:pointer;font-size:20px">✕</button>
-<div style="text-align:center;margin-bottom:32px">
+<div style="background:#0a0a0a;border:1px solid rgba(212,175,55,.15);padding:48px;max-width:420px;width:90%;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.8)">
+<button id="login-close" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#444;cursor:pointer;font-size:18px">✕</button>
+<div style="text-align:center;margin-bottom:36px">
 <h3 class="tg" style="font-size:24px;margin-bottom:8px">Client Portal</h3>
-<p class="fm" style="font-size:10px;color:#444;text-transform:uppercase;letter-spacing:.3em">SECURE_ACCESS_V.4.2</p>
+<p class="fm" style="font-size:9px;color:#333;text-transform:uppercase;letter-spacing:.3em">SECURE_ACCESS_V.4.2 // ENCRYPTED</p>
 </div>
 <form id="login-form">
-<div style="margin-bottom:20px"><label style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#666;margin-bottom:8px;font-weight:600">Client ID</label><input type="email" style="width:100%;background:#000;border:1px solid rgba(255,255,255,.1);padding:14px;color:#fff;font-size:14px;outline:none" placeholder="Enter credentials" required></div>
-<div style="margin-bottom:20px"><label style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#666;margin-bottom:8px;font-weight:600">Passphrase</label><input type="password" style="width:100%;background:#000;border:1px solid rgba(255,255,255,.1);padding:14px;color:#fff;font-size:14px;outline:none" placeholder="••••••••••" required></div>
-<div id="login-err" style="display:none;background:rgba(200,0,0,.1);border:1px solid rgba(200,0,0,.2);padding:12px;text-align:center;margin-bottom:16px"><p class="fm" style="color:#f87171;font-size:10px">ACCESS_DENIED :: INVALID_CREDENTIALS</p></div>
-<button type="submit" class="gold-btn" style="width:100%;padding:14px;font-size:11px;text-transform:uppercase;letter-spacing:.2em"><span id="l-btn-t">Authenticate</span></button>
+<div style="margin-bottom:20px"><label style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:#555;margin-bottom:8px;font-weight:600">Client ID</label><input type="email" style="width:100%;background:#000;border:1px solid rgba(255,255,255,.08);padding:14px;color:#fff;font-size:13px;outline:none;transition:border-color .3s" onfocus="this.style.borderColor='#d4af37'" onblur="this.style.borderColor='rgba(255,255,255,.08)'" placeholder="Enter corporate credentials" required></div>
+<div style="margin-bottom:24px"><label style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:#555;margin-bottom:8px;font-weight:600">Passphrase</label><input type="password" style="width:100%;background:#000;border:1px solid rgba(255,255,255,.08);padding:14px;color:#fff;font-size:13px;outline:none;transition:border-color .3s" onfocus="this.style.borderColor='#d4af37'" onblur="this.style.borderColor='rgba(255,255,255,.08)'" placeholder="••••••••••" required></div>
+<div id="login-err" style="display:none;background:rgba(200,0,0,.08);border:1px solid rgba(200,0,0,.15);padding:12px;text-align:center;margin-bottom:16px"><p class="fm" style="color:#f87171;font-size:10px">ACCESS_DENIED :: INVALID_CREDENTIALS</p></div>
+<button type="submit" class="gold-btn" style="width:100%;padding:14px;font-size:10px;text-transform:uppercase;letter-spacing:.25em"><span id="l-btn-t">Authenticate</span></button>
 </form>
-<div style="margin-top:24px;text-align:center;border-top:1px solid rgba(255,255,255,.05);padding-top:20px">
-<p class="fm" style="font-size:9px;color:#333;margin-bottom:8px">AES-256-GCM // ZERO-KNOWLEDGE AUTH</p>
-<a href="#assessment" id="req-acc" class="tg" style="font-size:10px;letter-spacing:.1em">Request Access →</a>
+<div style="margin-top:28px;text-align:center;border-top:1px solid rgba(255,255,255,.04);padding-top:20px">
+<p class="fm" style="font-size:8px;color:#222;margin-bottom:8px">AES-256-GCM // ZERO-KNOWLEDGE PROOF</p>
+<a href="#assessment" id="req-acc" class="tg hover-link" style="font-size:10px;letter-spacing:.1em;text-decoration:none">Request Access Credentials →</a>
 </div>
 </div>
 </div>
 
 <!-- NAV -->
-<nav style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(3,3,3,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,175,55,.07)" id="navbar">
+<nav id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(3,3,3,.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(212,175,55,.06);transition:all .5s">
 <div style="max-width:1280px;margin:0 auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center">
 <div style="display:flex;align-items:center;gap:12px">
-<div style="width:28px;height:28px;border:1px solid #d4af37;display:flex;align-items:center;justify-content:center;color:#d4af37;font-family:'Cinzel',serif;font-weight:700;font-size:14px">C</div>
-<a href="index.html" class="gold-grad" style="font-size:14px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;text-decoration:none">Crypvorex</a>
+<div style="width:28px;height:28px;border:1px solid #d4af37;display:flex;align-items:center;justify-content:center;color:#d4af37;font-family:'Cinzel',serif;font-weight:700;font-size:13px;transition:all .3s" onmouseover="this.style.background='#d4af37';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#d4af37'">C</div>
+<a href="index.html" class="gold-grad" style="font-size:13px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;text-decoration:none">Crypvorex</a>
 </div>
-<div id="desk-nav" style="display:flex;align-items:center;gap:32px">
-<a href="capabilities.html" style="font-size:10px;color:#999;text-decoration:none;text-transform:uppercase;letter-spacing:.2em">Capabilities</a>
-<a href="industries.html" style="font-size:10px;color:#999;text-decoration:none;text-transform:uppercase;letter-spacing:.2em">Industries</a>
-<a href="insights.html" style="font-size:10px;color:#999;text-decoration:none;text-transform:uppercase;letter-spacing:.2em">Insights</a>
-<a href="about.html" style="font-size:10px;color:#999;text-decoration:none;text-transform:uppercase;letter-spacing:.2em">About</a>
-<a href="careers.html" style="font-size:10px;color:#999;text-decoration:none;text-transform:uppercase;letter-spacing:.2em">Careers</a>
-<button id="nav-portal" class="gold-btn" style="padding:8px 20px;font-size:9px;letter-spacing:.2em;text-transform:uppercase">Client Portal</button>
-<button id="cmd-btn" style="background:none;border:1px solid rgba(255,255,255,.1);color:#666;cursor:pointer;padding:6px 12px;display:flex;align-items:center;gap:6px"><span class="fm" style="font-size:9px">⌘K</span></button>
+<div id="desk-nav" style="display:flex;align-items:center;gap:28px">
+<a href="capabilities.html" class="hover-link" style="font-size:10px;color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:.2em;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">Capabilities</a>
+<a href="industries.html" class="hover-link" style="font-size:10px;color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:.2em;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">Industries</a>
+<a href="insights.html" class="hover-link" style="font-size:10px;color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:.2em;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">Insights</a>
+<a href="about.html" class="hover-link" style="font-size:10px;color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:.2em;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">About</a>
+<a href="careers.html" class="hover-link" style="font-size:10px;color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:.2em;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">Careers</a>
+<button id="nav-portal" class="gold-btn" style="padding:8px 24px;font-size:9px;letter-spacing:.25em;text-transform:uppercase">Client Portal</button>
+<button id="cmd-btn" style="background:none;border:1px solid rgba(255,255,255,.08);color:#555;cursor:pointer;padding:6px 14px;display:flex;align-items:center;gap:6px;transition:all .3s" onmouseover="this.style.borderColor='rgba(212,175,55,.3)';this.style.color='#d4af37'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='#555'"><svg style="width:12px;height:12px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><span class="fm" style="font-size:9px">⌘K</span></button>
 </div>
 <button id="mob-btn" style="display:none;background:none;border:none;color:#d4af37;cursor:pointer;font-size:28px">☰</button>
 </div>
@@ -139,468 +196,434 @@ h1,h2,h3,h4,h5,h6{font-family:'Cinzel',serif}
 <!-- MOBILE NAV -->
 <div id="mob-nav">
 <button id="mob-close" style="position:absolute;top:24px;right:24px;background:none;border:none;color:#d4af37;cursor:pointer;font-size:32px">✕</button>
-<a href="capabilities.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif">Capabilities</a>
-<a href="industries.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif">Industries</a>
-<a href="insights.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif">Insights</a>
-<a href="about.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif">About</a>
-<a href="careers.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif">Careers</a>
-<button id="mob-portal" class="mob-lnk" style="font-size:20px;color:#d4af37;background:none;border:none;border-bottom:1px solid #d4af37;cursor:pointer;padding-bottom:4px;font-family:'Cinzel',serif">Client Portal</button>
+<a href="capabilities.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">Capabilities</a>
+<a href="industries.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">Industries</a>
+<a href="insights.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">Insights</a>
+<a href="about.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">About</a>
+<a href="careers.html" class="mob-lnk" style="font-size:24px;color:#fff;text-decoration:none;font-family:'Cinzel',serif;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">Careers</a>
+<button id="mob-portal" class="mob-lnk" style="font-size:20px;color:#d4af37;background:none;border:none;border-bottom:1px solid #d4af37;cursor:pointer;padding-bottom:4px;font-family:'Cinzel',serif;margin-top:16px">Client Portal</button>
 </div>
 
-<!-- ============================================================ -->
-<!-- HERO                                                          -->
-<!-- ============================================================ -->
-<div style="background:#030303;min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:80px">
-<div style="max-width:900px;margin:0 auto;padding:0 24px;text-align:center">
+<!-- ==================== HERO ==================== -->
+<div style="background:#030303;min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:80px;position:relative;overflow:hidden">
+<canvas id="hero-particles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></canvas>
+<div style="max-width:900px;margin:0 auto;padding:0 24px;text-align:center;position:relative;z-index:1">
 
-<div class="reveal-el">
-<div style="display:inline-flex;align-items:center;padding:8px 16px;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.02);margin-bottom:40px">
-<span style="width:6px;height:6px;background:#22c55e;border-radius:50%;margin-right:12px;display:inline-block"></span>
-<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em">Accepting Select Engagements — Q1 2026</span>
+<div class="rv">
+<div style="display:inline-flex;align-items:center;padding:10px 20px;border:1px solid rgba(212,175,55,.08);background:rgba(212,175,55,.02);margin-bottom:48px;backdrop-filter:blur(4px)">
+<span style="width:6px;height:6px;background:#22c55e;border-radius:50%;margin-right:12px;display:inline-block;animation:pulse 2s infinite"></span>
+<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.4em">Accepting Select Engagements — Q1 2026</span>
 </div>
 </div>
+<style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style>
 
-<h1 class="reveal-el" style="font-size:clamp(40px,8vw,90px);font-weight:900;line-height:.9;letter-spacing:-.02em;margin-bottom:32px">
+<h1 class="rv" style="font-size:clamp(44px,9vw,100px);font-weight:900;line-height:.88;letter-spacing:-.02em;margin-bottom:40px">
 ARCHITECTING<br><span class="gold-grad">DIGITAL</span><br>PERMANENCE.
 </h1>
 
-<p id="hero-sub" class="reveal-el" style="color:#777;font-size:15px;font-weight:300;max-width:500px;margin:0 auto 56px;letter-spacing:.03em">
+<p id="hero-sub" class="rv" style="color:#666;font-size:16px;font-weight:300;max-width:520px;margin:0 auto 60px;letter-spacing:.04em;line-height:1.7">
 The premier strategy consultancy for the decentralized economy.
 </p>
 
-<div class="reveal-el" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-<a href="#assessment" class="gold-btn" style="padding:16px 40px;font-size:10px;text-transform:uppercase;letter-spacing:.25em;text-decoration:none">Strategic Assessment</a>
-<a href="insights.html" style="padding:16px 40px;font-size:10px;text-transform:uppercase;letter-spacing:.25em;text-decoration:none;border:1px solid rgba(255,255,255,.1);color:#fff">Latest Research →</a>
+<div class="rv" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+<a href="#assessment" class="gold-btn" style="padding:18px 44px;font-size:10px;text-transform:uppercase;letter-spacing:.3em;text-decoration:none">Strategic Assessment</a>
+<a href="insights.html" style="padding:18px 44px;font-size:10px;text-transform:uppercase;letter-spacing:.3em;text-decoration:none;border:1px solid rgba(255,255,255,.08);color:#999;transition:all .3s" onmouseover="this.style.borderColor='rgba(212,175,55,.3)';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='#999'">Latest Research →</a>
 </div>
 
-<p class="reveal-el fm" style="color:#333;font-size:9px;text-transform:uppercase;letter-spacing:.3em;margin-top:80px">Press ⌘K to access Intelligence Terminal</p>
-
+<p class="rv fm" style="color:#222;font-size:9px;text-transform:uppercase;letter-spacing:.3em;margin-top:100px">Press ⌘K to access Intelligence Terminal</p>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- TICKER                                                        -->
-<!-- ============================================================ -->
-<div style="background:#080808;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);padding:8px 0" class="marquee-wrap">
-<div id="ticker" class="marquee-inner fm" style="font-size:10px;letter-spacing:.15em;color:#555">
-<span style="margin:0 32px">Initializing market feed...</span>
-</div>
+<!-- ==================== TICKER ==================== -->
+<div style="background:#080808;border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03);padding:10px 0;overflow:hidden">
+<div id="ticker" class="mq-inner fm" style="font-size:10px;letter-spacing:.1em;color:#444"></div>
 </div>
 
 <!-- AI PULSE -->
-<div style="background:#030303;border-bottom:1px solid rgba(255,255,255,.04);padding:12px 0">
+<div style="background:#030303;border-bottom:1px solid rgba(255,255,255,.03);padding:14px 0">
 <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px">
-<span class="fm tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.3em;font-weight:700;white-space:nowrap">AI Pulse</span>
-<span style="width:4px;height:4px;border-radius:50%;background:#d4af37"></span>
-<p id="ai-sent" class="fm" style="color:#555;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Analyzing institutional flow patterns...</p>
+<div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span class="fm tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">AI Pulse</span><span style="width:5px;height:5px;border-radius:50%;background:#d4af37;animation:pulse 2s infinite"></span></div>
+<p id="ai-sent" class="fm" style="color:#444;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Analyzing institutional flow patterns across major digital asset classes...</p>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- STATS                                                         -->
-<!-- ============================================================ -->
-<div style="background:#030303;padding:128px 24px">
-<div class="reveal-el" style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:64px;text-align:center">
-<div>
-<p class="encrypted" style="font-size:clamp(40px,5vw,72px);font-weight:700;margin-bottom:12px" data-target="4+" data-delay="0">████</p>
-<p style="color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.3em">Years Operating</p>
-</div>
-<div>
-<p class="encrypted" style="font-size:clamp(40px,5vw,72px);font-weight:700;margin-bottom:12px" data-target="20+" data-delay="200">████</p>
-<p style="color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.3em">Protocols Scaled</p>
-</div>
-<div>
-<p class="encrypted" style="font-size:clamp(40px,5vw,72px);font-weight:700;margin-bottom:12px" data-target="98%" data-delay="400">████</p>
-<p style="color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.3em">Client Retention</p>
-</div>
+<!-- ==================== STATS ==================== -->
+<div style="background:#030303;padding:140px 24px">
+<div class="rv" style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:64px;text-align:center" class="grid-3">
+<div><p class="encrypted" style="font-size:clamp(44px,6vw,80px);font-weight:700;margin-bottom:12px" data-target="4+" data-delay="0">████</p><p style="color:#444;font-size:9px;text-transform:uppercase;letter-spacing:.35em">Years Operating</p></div>
+<div><p class="encrypted" style="font-size:clamp(44px,6vw,80px);font-weight:700;margin-bottom:12px" data-target="20+" data-delay="200">████</p><p style="color:#444;font-size:9px;text-transform:uppercase;letter-spacing:.35em">Protocols Scaled</p></div>
+<div><p class="encrypted" style="font-size:clamp(44px,6vw,80px);font-weight:700;margin-bottom:12px" data-target="98%" data-delay="400">████</p><p style="color:#444;font-size:9px;text-transform:uppercase;letter-spacing:.35em">Client Retention</p></div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- THESIS                                                        -->
-<!-- ============================================================ -->
-<div style="background:#080808;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);padding:128px 24px">
-<div class="reveal-el" style="max-width:800px;margin:0 auto;text-align:center">
-<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">Our Position</span>
-<h2 style="font-size:clamp(24px,4vw,48px);margin-top:24px;line-height:1.2">We don't follow market cycles.<br><span class="tg" style="font-style:italic">We architect what survives them.</span></h2>
-<p style="color:#888;font-size:15px;font-weight:300;margin-top:32px;line-height:1.8;max-width:640px;margin-left:auto;margin-right:auto">In a market driven by noise, we provide the signal. Crypvorex is the strategic partner for founders building protocols, economies, and institutions meant to endure.</p>
+<!-- ==================== THESIS ==================== -->
+<div style="background:#080808;border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03);padding:140px 24px">
+<div class="rv" style="max-width:800px;margin:0 auto;text-align:center">
+<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">Our Position</span>
+<h2 style="font-size:clamp(26px,4vw,52px);margin-top:28px;line-height:1.15">We don't follow market cycles.<br><span class="tg" style="font-style:italic">We architect what survives them.</span></h2>
+<p style="color:#777;font-size:15px;font-weight:300;margin-top:36px;line-height:1.9;max-width:640px;margin-left:auto;margin-right:auto">In a market driven by noise, we provide the signal. Crypvorex is the strategic partner for founders building protocols, economies, and institutions meant to endure.</p>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- CAPABILITIES                                                  -->
-<!-- ============================================================ -->
-<div style="background:#030303;padding:128px 24px">
-<div style="max-width:1200px;margin:0 auto;display:flex;gap:80px;flex-wrap:wrap">
-<div style="flex:1;min-width:280px">
-<div class="reveal-el">
-<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">Capabilities</span>
-<h2 style="font-size:clamp(28px,4vw,48px);margin-top:16px;margin-bottom:24px;line-height:1.1">End-to-End<br><span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Transformation</span></h2>
-<p style="color:#888;font-size:14px;font-weight:300;line-height:1.8;margin-bottom:32px">From tokenomics architecture to exchange listing — our consultants embed within your team to execute with surgical precision.</p>
-<a href="capabilities.html" class="gold-btn" style="padding:12px 32px;font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none">View All Capabilities</a>
-</div>
-</div>
-<div style="flex:2;min-width:400px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
+<!-- ==================== CAPABILITIES ==================== -->
+<div style="background:#030303;padding:140px 24px">
+<div style="max-width:1200px;margin:0 auto;display:flex;gap:80px;flex-wrap:wrap" class="flex-cap">
+<div style="flex:1;min-width:280px"><div class="rv" style="position:sticky;top:120px">
+<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">Capabilities</span>
+<h2 style="font-size:clamp(30px,4vw,52px);margin-top:16px;margin-bottom:28px;line-height:1.05">End-to-End<br><span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Transformation</span></h2>
+<p style="color:#777;font-size:14px;font-weight:300;line-height:1.8;margin-bottom:36px">From tokenomics architecture to exchange listing — our consultants embed within your team to execute with surgical precision.</p>
+<a href="capabilities.html" class="gold-btn" style="padding:14px 36px;font-size:9px;text-transform:uppercase;letter-spacing:.25em;text-decoration:none">View All Capabilities</a>
+</div></div>
 
-<div class="glow-card reveal-el" style="background:#0a0a0a;padding:40px;border:1px solid rgba(255,255,255,.05)">
-<h3 style="font-size:18px;margin-bottom:12px">DeFi Engineering</h3>
-<p style="color:#555;font-size:12px;line-height:1.7;margin-bottom:24px">Liquidity architecture, AMM mathematics, yield optimization, and smart contract advisory.</p>
-<a href="capabilities.html#defi" class="tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:2px">Explore →</a>
+<div style="flex:2;min-width:400px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px" class="cap-right grid-3">
+
+<div class="glow-card rv" style="background:#0a0a0a;padding:44px;border:1px solid rgba(255,255,255,.04)">
+<div class="glow-follow"></div>
+<h3 style="font-size:19px;margin-bottom:14px;position:relative">DeFi Engineering</h3>
+<p style="color:#555;font-size:12px;line-height:1.8;margin-bottom:28px;position:relative">Liquidity architecture, AMM mathematics, yield optimization, and smart contract advisory.</p>
+<a href="capabilities.html#defi" class="tg hover-link" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;position:relative">Explore →</a>
 </div>
 
-<div class="glow-card reveal-el" style="background:#0a0a0a;padding:40px;border:1px solid rgba(255,255,255,.05)">
-<h3 style="font-size:18px;margin-bottom:12px">Tokenomics Design</h3>
-<p style="color:#555;font-size:12px;line-height:1.7;margin-bottom:24px">Inflation modeling, vesting architecture, game-theory incentive alignment, and value accrual.</p>
-<a href="capabilities.html#tokenomics" class="tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:2px">Explore →</a>
+<div class="glow-card rv" style="background:#0a0a0a;padding:44px;border:1px solid rgba(255,255,255,.04)">
+<div class="glow-follow"></div>
+<h3 style="font-size:19px;margin-bottom:14px;position:relative">Tokenomics Design</h3>
+<p style="color:#555;font-size:12px;line-height:1.8;margin-bottom:28px;position:relative">Inflation modeling, vesting architecture, game-theory incentive alignment, and value accrual.</p>
+<a href="capabilities.html#tokenomics" class="tg hover-link" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;position:relative">Explore →</a>
 </div>
 
-<div class="glow-card reveal-el" style="background:#0a0a0a;padding:40px;border:1px solid rgba(255,255,255,.05)">
-<h3 style="font-size:18px;margin-bottom:12px">Growth & Acquisition</h3>
-<p style="color:#555;font-size:12px;line-height:1.7;margin-bottom:24px">On-chain targeting, KOL strategy, community architecture, and viral go-to-market execution.</p>
-<a href="capabilities.html#growth" class="tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:2px">Explore →</a>
+<div class="glow-card rv" style="background:#0a0a0a;padding:44px;border:1px solid rgba(255,255,255,.04)">
+<div class="glow-follow"></div>
+<h3 style="font-size:19px;margin-bottom:14px;position:relative">Growth & Acquisition</h3>
+<p style="color:#555;font-size:12px;line-height:1.8;margin-bottom:28px;position:relative">On-chain targeting, KOL strategy, community architecture, and viral go-to-market execution.</p>
+<a href="capabilities.html#growth" class="tg hover-link" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;position:relative">Explore →</a>
 </div>
 
-<div class="glow-card reveal-el" style="background:#0a0a0a;padding:40px;border:1px solid rgba(255,255,255,.05)">
-<h3 style="font-size:18px;margin-bottom:12px">Capital Formation</h3>
-<p style="color:#555;font-size:12px;line-height:1.7;margin-bottom:24px">VC network activation, pitch architecture, fundraising strategy, and term sheet advisory.</p>
-<a href="capabilities.html#vc" class="tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:2px">Explore →</a>
+<div class="glow-card rv" style="background:#0a0a0a;padding:44px;border:1px solid rgba(255,255,255,.04)">
+<div class="glow-follow"></div>
+<h3 style="font-size:19px;margin-bottom:14px;position:relative">Capital Formation</h3>
+<p style="color:#555;font-size:12px;line-height:1.8;margin-bottom:28px;position:relative">VC network activation, pitch architecture, fundraising strategy, and term sheet advisory.</p>
+<a href="capabilities.html#vc" class="tg hover-link" style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;position:relative">Explore →</a>
 </div>
 
-</div>
-</div>
-</div>
+</div></div></div>
 
-<!-- ============================================================ -->
-<!-- TERMINAL                                                      -->
-<!-- ============================================================ -->
-<div style="background:#080808;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);padding:128px 24px" id="terminal">
+<!-- ==================== TERMINAL ==================== -->
+<div style="background:#080808;border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03);padding:140px 24px" id="terminal">
 <div style="max-width:1100px;margin:0 auto">
-<div class="reveal-el" style="text-align:center;margin-bottom:64px">
-<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">Market Intelligence</span>
-<h2 style="font-size:clamp(24px,3vw,40px);margin-top:16px">Intelligence <span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Terminal</span></h2>
+<div class="rv" style="text-align:center;margin-bottom:64px">
+<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">Market Intelligence</span>
+<h2 style="font-size:clamp(26px,3vw,42px);margin-top:16px">Intelligence <span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Terminal</span></h2>
 </div>
-<div class="reveal-el" style="background:#000;border:1px solid rgba(255,255,255,.08);overflow:hidden">
-<!-- Header -->
-<div style="padding:12px 24px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center">
-<div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#22c55e"></span><span class="fm" style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:.15em">CRYPVOREX TERMINAL v4.2 // LIVE</span></div>
-<span class="fm" style="font-size:9px;color:#444" id="t-time">--:--:-- UTC</span>
+<div class="rv border-glow" style="background:#000;border:1px solid rgba(255,255,255,.06);overflow:hidden">
+<div style="padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center">
+<div style="display:flex;align-items:center;gap:10px"><span style="width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite"></span><span class="fm" style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.2em">CRYPVOREX TERMINAL v4.2 // LIVE FEED</span></div>
+<span class="fm" style="font-size:9px;color:#333" id="t-time">--:--:-- UTC</span>
 </div>
-<!-- Row 1 -->
-<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(255,255,255,.05)">
-<div style="padding:20px;border-right:1px solid rgba(255,255,255,.05)"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">BTC</p><p class="fm" style="font-size:18px" id="t-btc">--</p><p class="fm" style="font-size:10px;margin-top:2px" id="t-btc-c">--</p></div>
-<div style="padding:20px;border-right:1px solid rgba(255,255,255,.05)"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">ETH</p><p class="fm" style="font-size:18px" id="t-eth">--</p><p class="fm" style="font-size:10px;margin-top:2px" id="t-eth-c">--</p></div>
-<div style="padding:20px;border-right:1px solid rgba(255,255,255,.05)"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">SOL</p><p class="fm" style="font-size:18px" id="t-sol">--</p><p class="fm" style="font-size:10px;margin-top:2px" id="t-sol-c">--</p></div>
-<div style="padding:20px"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">Fear/Greed</p><p class="fm" style="font-size:18px" id="t-fg">--</p><p class="fm" style="font-size:10px;color:#666;margin-top:2px" id="t-fg-l">--</p></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(255,255,255,.04)" class="grid-4">
+<div style="padding:24px;border-right:1px solid rgba(255,255,255,.04)"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">BTC</p><p class="fm" style="font-size:20px" id="t-btc">--</p><p class="fm" style="font-size:10px;margin-top:4px" id="t-btc-c">--</p></div>
+<div style="padding:24px;border-right:1px solid rgba(255,255,255,.04)"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">ETH</p><p class="fm" style="font-size:20px" id="t-eth">--</p><p class="fm" style="font-size:10px;margin-top:4px" id="t-eth-c">--</p></div>
+<div style="padding:24px;border-right:1px solid rgba(255,255,255,.04)"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">SOL</p><p class="fm" style="font-size:20px" id="t-sol">--</p><p class="fm" style="font-size:10px;margin-top:4px" id="t-sol-c">--</p></div>
+<div style="padding:24px"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">Fear/Greed</p><p class="fm" style="font-size:20px" id="t-fg">--</p><p class="fm" style="font-size:10px;color:#555;margin-top:4px" id="t-fg-l">--</p></div>
 </div>
-<!-- Row 2 -->
-<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(255,255,255,.05)">
-<div style="padding:20px;border-right:1px solid rgba(255,255,255,.05)"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">DeFi TVL</p><p class="fm" style="font-size:18px" id="t-tvl">--</p></div>
-<div style="padding:20px;border-right:1px solid rgba(255,255,255,.05)"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">BTC Dom.</p><p class="fm" style="font-size:18px" id="t-dom">--</p></div>
-<div style="padding:20px;border-right:1px solid rgba(255,255,255,.05)"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">ETH Gas</p><p class="fm" style="font-size:18px" id="t-gas">--</p></div>
-<div style="padding:20px"><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">Total MCap</p><p class="fm" style="font-size:18px" id="t-mcap">--</p></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(255,255,255,.04)" class="grid-4">
+<div style="padding:24px;border-right:1px solid rgba(255,255,255,.04)"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">DeFi TVL</p><p class="fm" style="font-size:20px" id="t-tvl">--</p></div>
+<div style="padding:24px;border-right:1px solid rgba(255,255,255,.04)"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">BTC Dom.</p><p class="fm" style="font-size:20px" id="t-dom">--</p></div>
+<div style="padding:24px;border-right:1px solid rgba(255,255,255,.04)"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">ETH Gas</p><p class="fm" style="font-size:20px" id="t-gas">--</p></div>
+<div style="padding:24px"><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px">Total MCap</p><p class="fm" style="font-size:20px" id="t-mcap">--</p></div>
 </div>
-<!-- AI Thesis -->
-<div style="padding:24px;border-top:1px solid rgba(212,175,55,.08);background:rgba(212,175,55,.01)">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span class="fm tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.15em;font-weight:700">AI Market Thesis</span><span style="width:4px;height:4px;border-radius:50%;background:#d4af37"></span></div>
-<p id="ai-thesis" class="fm" style="color:#888;font-size:12px;line-height:1.7">Generating institutional market thesis...</p>
+<div style="padding:28px;border-top:1px solid rgba(212,175,55,.06);background:rgba(212,175,55,.008)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="width:5px;height:5px;border-radius:50%;background:#d4af37;animation:pulse 2s infinite"></span><span class="fm tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.2em;font-weight:700">AI Market Thesis</span><span class="fm" style="font-size:8px;color:#333">// UPDATED EVERY 5 MIN</span></div>
+<p id="ai-thesis" class="fm" style="color:#777;font-size:12px;line-height:1.8">Generating institutional market thesis from cross-chain data signals...</p>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- PERSPECTIVES                                                  -->
-<!-- ============================================================ -->
-<div style="background:#030303;padding:128px 24px">
+<!-- ==================== PERSPECTIVES ==================== -->
+<div style="background:#030303;padding:140px 24px">
 <div style="max-width:1200px;margin:0 auto">
-<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px">
-<div class="reveal-el"><span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">Perspectives</span><h2 style="font-size:clamp(24px,3vw,40px);margin-top:16px">Latest <span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Thinking</span></h2></div>
-<a href="insights.html" style="color:#666;font-size:10px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;border-bottom:1px solid transparent">All Insights →</a>
+<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:16px">
+<div class="rv"><span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">Perspectives</span><h2 style="font-size:clamp(26px,3vw,42px);margin-top:16px">Latest <span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Thinking</span></h2></div>
+<a href="insights.html" class="hover-link" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#555'">All Insights →</a>
 </div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px" class="grid-3">
 
-<a href="article.html" style="text-decoration:none;color:inherit;display:block" class="reveal-el">
-<div style="height:224px;background:#111;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.05)">
-<img src="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover">
-<div style="position:absolute;bottom:12px;left:12px"><span style="font-size:8px;background:#d4af37;color:#000;font-weight:700;padding:2px 8px;text-transform:uppercase;letter-spacing:.1em">Strategy</span></div>
+<a href="article.html" style="text-decoration:none;color:inherit;display:block" class="rv">
+<div class="border-glow" style="height:240px;background:#111;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.04)">
+<img src="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover;transition:transform .7s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<div style="position:absolute;bottom:12px;left:12px"><span style="font-size:8px;background:#d4af37;color:#000;font-weight:700;padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">Strategy</span></div>
 </div>
-<p class="fm" style="font-size:9px;color:#555;margin-bottom:8px">MARCH 2026</p>
-<h3 style="font-size:15px;margin-bottom:8px">The Death of Low Float / High FDV Tokenomics</h3>
+<p class="fm" style="font-size:9px;color:#444;margin-bottom:8px">MARCH 2026</p>
+<h3 style="font-size:16px;margin-bottom:10px;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">The Death of Low Float / High FDV Tokenomics</h3>
 <p style="color:#555;font-size:12px;line-height:1.6">Why markets reject predatory token structures.</p>
 </a>
 
-<a href="article.html" style="text-decoration:none;color:inherit;display:block" class="reveal-el">
-<div style="height:224px;background:#111;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.05)">
-<img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover">
-<div style="position:absolute;bottom:12px;left:12px"><span style="font-size:8px;background:#fff;color:#000;font-weight:700;padding:2px 8px;text-transform:uppercase;letter-spacing:.1em">DeFi</span></div>
+<a href="article.html" style="text-decoration:none;color:inherit;display:block" class="rv">
+<div class="border-glow" style="height:240px;background:#111;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.04)">
+<img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover;transition:transform .7s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<div style="position:absolute;bottom:12px;left:12px"><span style="font-size:8px;background:#fff;color:#000;font-weight:700;padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">DeFi</span></div>
 </div>
-<p class="fm" style="font-size:9px;color:#555;margin-bottom:8px">FEBRUARY 2026</p>
-<h3 style="font-size:15px;margin-bottom:8px">Real World Assets on Chain</h3>
+<p class="fm" style="font-size:9px;color:#444;margin-bottom:8px">FEBRUARY 2026</p>
+<h3 style="font-size:16px;margin-bottom:10px;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">Real World Assets on Chain</h3>
 <p style="color:#555;font-size:12px;line-height:1.6">Tokenized treasury bills reshaping yields.</p>
 </a>
 
-<a href="article.html" style="text-decoration:none;color:inherit;display:block" class="reveal-el">
-<div style="height:224px;background:#111;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.05)">
-<img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover">
-<div style="position:absolute;bottom:12px;left:12px"><span style="font-size:8px;background:#555;color:#fff;font-weight:700;padding:2px 8px;text-transform:uppercase;letter-spacing:.1em">Regulation</span></div>
+<a href="article.html" style="text-decoration:none;color:inherit;display:block" class="rv">
+<div class="border-glow" style="height:240px;background:#111;overflow:hidden;position:relative;margin-bottom:20px;border:1px solid rgba(255,255,255,.04)">
+<img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover;transition:transform .7s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<div style="position:absolute;bottom:12px;left:12px"><span style="font-size:8px;background:#555;color:#fff;font-weight:700;padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">Regulation</span></div>
 </div>
-<p class="fm" style="font-size:9px;color:#555;margin-bottom:8px">JANUARY 2026</p>
-<h3 style="font-size:15px;margin-bottom:8px">Institutional Custody Standards 2026</h3>
+<p class="fm" style="font-size:9px;color:#444;margin-bottom:8px">JANUARY 2026</p>
+<h3 style="font-size:16px;margin-bottom:10px;transition:color .3s" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#fff'">Institutional Custody Standards 2026</h3>
 <p style="color:#555;font-size:12px;line-height:1.6">New SEC guidelines and treasury management.</p>
 </a>
 
-</div>
+</div></div></div>
+
+<!-- ==================== QUOTE ==================== -->
+<div style="background:#000;padding:140px 24px;text-align:center;position:relative;overflow:hidden">
+<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40vw;font-family:'Cinzel',serif;color:rgba(212,175,55,.015);line-height:1;pointer-events:none">"</div>
+<div class="rv" style="max-width:700px;margin:0 auto;position:relative">
+<p style="font-size:clamp(20px,3vw,32px);font-family:'Cinzel',serif;font-style:italic;line-height:1.5;margin-bottom:44px">"Crypvorex reworked our entire tokenomics model. Two months later, we closed our Series A. Their insight into DeFi incentives is unmatched."</p>
+<div style="display:flex;align-items:center;justify-content:center;gap:16px"><div style="height:1px;width:40px;background:#d4af37"></div><span class="tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">David A. — CEO, Nexus Protocol</span><div style="height:1px;width:40px;background:#d4af37"></div></div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- QUOTE                                                         -->
-<!-- ============================================================ -->
-<div style="background:#000;padding:128px 24px;text-align:center">
-<div class="reveal-el" style="max-width:700px;margin:0 auto">
-<p style="font-size:clamp(18px,3vw,30px);font-family:'Cinzel',serif;font-style:italic;line-height:1.5;margin-bottom:40px">"Crypvorex reworked our entire tokenomics model. Two months later, we closed our Series A. Their insight into DeFi incentives is unmatched."</p>
-<div style="display:flex;align-items:center;justify-content:center;gap:12px"><div style="height:1px;width:32px;background:#d4af37"></div><span class="tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">David A. — CEO, Nexus Protocol</span><div style="height:1px;width:32px;background:#d4af37"></div></div>
-</div>
-</div>
-
-<!-- ============================================================ -->
-<!-- TIERS                                                         -->
-<!-- ============================================================ -->
-<div style="background:#080808;padding:128px 24px" id="engagement">
+<!-- ==================== TIERS ==================== -->
+<div style="background:#080808;padding:140px 24px" id="engagement">
 <div style="max-width:1000px;margin:0 auto">
-<div class="reveal-el" style="text-align:center;margin-bottom:64px">
-<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">Engagement Models</span>
-<h2 style="font-size:clamp(24px,3vw,40px);margin-top:16px">Partnership <span class="gold-grad">Tiers</span></h2>
-</div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+<div class="rv" style="text-align:center;margin-bottom:64px"><span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">Engagement Models</span><h2 style="font-size:clamp(26px,3vw,42px);margin-top:16px">Partnership <span class="gold-grad">Tiers</span></h2></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px" class="grid-3">
 
-<div class="reveal-el" style="background:#0a0a0a;padding:32px;border:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column">
-<h3 style="font-size:20px;color:#ccc;margin-bottom:4px">Advisory</h3>
-<p style="color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:32px">Emerging Projects</p>
-<ul style="list-style:none;flex:1;color:#777;font-size:12px;line-height:2.2"><li>✓ Monthly Strategy Calls</li><li>✓ Whitepaper Review</li><li>✓ Tokenomics Audit</li><li>✓ Competitive Landscape</li></ul>
-<a href="#assessment" style="display:block;text-align:center;padding:12px;border:1px solid rgba(255,255,255,.1);color:#fff;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-top:32px">Inquire</a>
+<div class="rv border-glow" style="background:#0a0a0a;padding:36px;border:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column">
+<h3 style="font-size:20px;color:#bbb;margin-bottom:4px">Advisory</h3><p style="color:#444;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:36px">Emerging Projects</p>
+<ul style="list-style:none;flex:1;color:#666;font-size:12px;line-height:2.4"><li>✓ Monthly Strategy Calls</li><li>✓ Whitepaper Review</li><li>✓ Tokenomics Audit</li><li>✓ Competitive Landscape</li></ul>
+<a href="#assessment" style="display:block;text-align:center;padding:14px;border:1px solid rgba(255,255,255,.08);color:#999;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-top:36px;transition:all .3s" onmouseover="this.style.borderColor='#d4af37';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='#999'">Inquire</a>
 </div>
 
-<div class="reveal-el" style="background:#0a0a0a;padding:32px;border:2px solid #d4af37;display:flex;flex-direction:column;position:relative;box-shadow:0 0 60px rgba(212,175,55,.05)">
-<div style="position:absolute;top:0;right:0;background:#d4af37;color:#000;font-size:8px;font-weight:700;padding:4px 12px;text-transform:uppercase;letter-spacing:.1em">Recommended</div>
-<h3 class="tg" style="font-size:20px;margin-bottom:4px">Strategic</h3>
-<p style="color:#8B7500;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:32px">Scaling Protocols</p>
-<ul style="list-style:none;flex:1;color:#ccc;font-size:12px;line-height:2.2"><li><span class="tg">✓</span> Weekly Implementation</li><li><span class="tg">✓</span> Dedicated Consultant</li><li><span class="tg">✓</span> VC Introductions</li><li><span class="tg">✓</span> GTM Execution</li></ul>
-<a href="#assessment" class="gold-btn" style="display:block;text-align:center;padding:12px;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-top:32px">Apply Now</a>
+<div class="rv" style="background:#0a0a0a;padding:36px;border:2px solid #d4af37;display:flex;flex-direction:column;position:relative;box-shadow:0 0 80px rgba(212,175,55,.04)">
+<div style="position:absolute;top:0;right:0;background:#d4af37;color:#000;font-size:8px;font-weight:700;padding:5px 14px;text-transform:uppercase;letter-spacing:.15em">Recommended</div>
+<h3 class="tg" style="font-size:20px;margin-bottom:4px">Strategic</h3><p style="color:#8B7500;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:36px">Scaling Protocols</p>
+<ul style="list-style:none;flex:1;color:#ccc;font-size:12px;line-height:2.4"><li><span class="tg">✓</span> Weekly Implementation</li><li><span class="tg">✓</span> Dedicated Consultant</li><li><span class="tg">✓</span> VC Introductions</li><li><span class="tg">✓</span> GTM Execution</li></ul>
+<a href="#assessment" class="gold-btn" style="display:block;text-align:center;padding:14px;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-top:36px">Apply Now</a>
 </div>
 
-<div class="reveal-el" style="background:#0a0a0a;padding:32px;border:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column">
-<h3 style="font-size:20px;color:#ccc;margin-bottom:4px">Enterprise</h3>
-<p style="color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:32px">Full Incubation</p>
-<ul style="list-style:none;flex:1;color:#777;font-size:12px;line-height:2.2"><li>✓ Full-Service Incubation</li><li>✓ Team Recruitment</li><li>✓ Legal & Compliance</li><li>✓ CEX Listing Support</li></ul>
-<a href="#assessment" style="display:block;text-align:center;padding:12px;border:1px solid rgba(255,255,255,.1);color:#fff;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-top:32px">Contact</a>
+<div class="rv border-glow" style="background:#0a0a0a;padding:36px;border:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column">
+<h3 style="font-size:20px;color:#bbb;margin-bottom:4px">Enterprise</h3><p style="color:#444;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:36px">Full Incubation</p>
+<ul style="list-style:none;flex:1;color:#666;font-size:12px;line-height:2.4"><li>✓ Full-Service Incubation</li><li>✓ Team Recruitment</li><li>✓ Legal & Compliance</li><li>✓ CEX Listing Support</li></ul>
+<a href="#assessment" style="display:block;text-align:center;padding:14px;border:1px solid rgba(255,255,255,.08);color:#999;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.2em;margin-top:36px;transition:all .3s" onmouseover="this.style.borderColor='#d4af37';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.color='#999'">Contact</a>
 </div>
 
-</div>
-</div>
-</div>
+</div></div></div>
 
-<!-- ============================================================ -->
-<!-- ASSESSMENT                                                    -->
-<!-- ============================================================ -->
-<div style="background:#030303;border-top:1px solid rgba(212,175,55,.08);border-bottom:1px solid rgba(212,175,55,.08);padding:128px 24px" id="assessment">
+<!-- ==================== ASSESSMENT ==================== -->
+<div style="background:#030303;border-top:1px solid rgba(212,175,55,.06);border-bottom:1px solid rgba(212,175,55,.06);padding:140px 24px" id="assessment">
 <div style="max-width:700px;margin:0 auto">
-<div class="reveal-el" style="text-align:center;margin-bottom:64px">
-<span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;font-weight:700">Intelligence Engine™</span>
-<h2 style="font-size:clamp(24px,3vw,40px);margin-top:16px">Strategic <span class="gold-grad">Assessment</span></h2>
-<p style="color:#555;font-size:12px;margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto">Our AI generates a preliminary strategic assessment using frameworks from our engagements.</p>
+<div class="rv" style="text-align:center;margin-bottom:64px"><span class="fm tg" style="font-size:9px;text-transform:uppercase;letter-spacing:.35em;font-weight:700">Intelligence Engine™</span><h2 style="font-size:clamp(26px,3vw,42px);margin-top:16px">Strategic <span class="gold-grad">Assessment</span></h2><p style="color:#555;font-size:13px;margin-top:20px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7">Our AI generates a preliminary strategic assessment using frameworks from our client engagements.</p></div>
+<div class="rv" style="background:#0a0a0a;border:1px solid rgba(255,255,255,.04);padding:44px">
+<div style="margin-bottom:36px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em">Progress</span><span class="fm" style="font-size:8px;color:#444" id="step-n">1 / 6</span></div><div style="width:100%;height:1px;background:rgba(255,255,255,.06)"><div id="prog-bar" style="height:100%;background:#d4af37;width:16.66%;transition:width .6s ease"></div></div></div>
+
+<div class="assess-step active" data-s="1"><h3 style="font-size:18px;margin-bottom:24px">Project type?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="DeFi" onclick="pick(this,'projectType')"><span style="font-size:12px">DeFi Protocol</span></div><div class="step-choice" data-v="L1/L2" onclick="pick(this,'projectType')"><span style="font-size:12px">Layer 1/2</span></div><div class="step-choice" data-v="GameFi" onclick="pick(this,'projectType')"><span style="font-size:12px">GameFi</span></div><div class="step-choice" data-v="NFT" onclick="pick(this,'projectType')"><span style="font-size:12px">NFT/Creator</span></div><div class="step-choice" data-v="RWA" onclick="pick(this,'projectType')"><span style="font-size:12px">RWA</span></div><div class="step-choice" data-v="Exchange" onclick="pick(this,'projectType')"><span style="font-size:12px">Exchange</span></div></div></div>
+<div class="assess-step" data-s="2"><h3 style="font-size:18px;margin-bottom:24px">Stage?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Ideation" onclick="pick(this,'stage')"><span style="font-size:12px">Ideation</span></div><div class="step-choice" data-v="MVP" onclick="pick(this,'stage')"><span style="font-size:12px">MVP</span></div><div class="step-choice" data-v="Pre-TGE" onclick="pick(this,'stage')"><span style="font-size:12px">Pre-TGE</span></div><div class="step-choice" data-v="Post-Launch" onclick="pick(this,'stage')"><span style="font-size:12px">Post-Launch</span></div></div></div>
+<div class="assess-step" data-s="3"><h3 style="font-size:18px;margin-bottom:24px">Challenge?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Tokenomics" onclick="pick(this,'challenge')"><span style="font-size:12px">Tokenomics</span></div><div class="step-choice" data-v="Fundraising" onclick="pick(this,'challenge')"><span style="font-size:12px">Fundraising</span></div><div class="step-choice" data-v="Growth" onclick="pick(this,'challenge')"><span style="font-size:12px">Growth</span></div><div class="step-choice" data-v="Listing" onclick="pick(this,'challenge')"><span style="font-size:12px">Listing</span></div><div class="step-choice" data-v="Community" onclick="pick(this,'challenge')"><span style="font-size:12px">Community</span></div><div class="step-choice" data-v="GTM" onclick="pick(this,'challenge')"><span style="font-size:12px">Full GTM</span></div></div></div>
+<div class="assess-step" data-s="4"><h3 style="font-size:18px;margin-bottom:24px">Market?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Retail" onclick="pick(this,'market')"><span style="font-size:12px">Retail</span></div><div class="step-choice" data-v="Institutional" onclick="pick(this,'market')"><span style="font-size:12px">Institutional</span></div><div class="step-choice" data-v="Developer" onclick="pick(this,'market')"><span style="font-size:12px">Developer</span></div><div class="step-choice" data-v="Hybrid" onclick="pick(this,'market')"><span style="font-size:12px">Hybrid</span></div></div></div>
+<div class="assess-step" data-s="5"><h3 style="font-size:18px;margin-bottom:24px">Team?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Solo" onclick="pick(this,'teamSize')"><span style="font-size:12px">Solo</span></div><div class="step-choice" data-v="2-5" onclick="pick(this,'teamSize')"><span style="font-size:12px">2–5</span></div><div class="step-choice" data-v="6-15" onclick="pick(this,'teamSize')"><span style="font-size:12px">6–15</span></div><div class="step-choice" data-v="15+" onclick="pick(this,'teamSize')"><span style="font-size:12px">15+</span></div></div></div>
+<div class="assess-step" data-s="6"><h3 style="font-size:18px;margin-bottom:24px">Funding & email</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px"><div class="step-choice" data-v="Bootstrapped" onclick="pick(this,'funding')"><span style="font-size:12px">Bootstrapped</span></div><div class="step-choice" data-v="Pre-Seed" onclick="pick(this,'funding')"><span style="font-size:12px">Pre-Seed</span></div><div class="step-choice" data-v="Seed" onclick="pick(this,'funding')"><span style="font-size:12px">Seed</span></div><div class="step-choice" data-v="Series A+" onclick="pick(this,'funding')"><span style="font-size:12px">Series A+</span></div></div><label style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:#444;margin-bottom:8px">Email</label><input type="email" id="a-email" style="width:100%;background:#000;border:1px solid rgba(255,255,255,.06);padding:14px;color:#fff;font-size:13px;outline:none;transition:border-color .3s" onfocus="this.style.borderColor='#d4af37'" onblur="this.style.borderColor='rgba(255,255,255,.06)'" placeholder="founder@protocol.io"><button onclick="runAssess()" class="gold-btn" style="width:100%;padding:14px;font-size:10px;text-transform:uppercase;letter-spacing:.25em;margin-top:16px;cursor:pointer"><span id="a-btn-t">Generate Assessment</span></button></div>
+
+<div id="a-load" style="display:none;text-align:center;padding:40px 0;margin-top:32px"><div style="display:flex;justify-content:center;gap:4px;margin-bottom:12px"><span style="width:6px;height:6px;border-radius:50%;background:#d4af37;animation:bounce 1.4s infinite"></span><span style="width:6px;height:6px;border-radius:50%;background:#d4af37;animation:bounce 1.4s infinite .2s"></span><span style="width:6px;height:6px;border-radius:50%;background:#d4af37;animation:bounce 1.4s infinite .4s"></span></div><p class="fm" style="color:#444;font-size:10px">Intelligence Engine processing...</p></div>
+<style>@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}</style>
+<div id="a-out" style="display:none;margin-top:32px;padding-top:32px;border-top:1px solid rgba(212,175,55,.12)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:24px"><div style="width:28px;height:28px;border:1px solid #d4af37;display:flex;align-items:center;justify-content:center;color:#d4af37;font-family:'Cinzel',serif;font-size:11px;font-weight:700">C</div><div><p style="font-size:13px;font-weight:700">Intelligence Engine™</p><p class="fm" style="font-size:8px;color:#444;text-transform:uppercase;letter-spacing:.2em">Preliminary Assessment</p></div></div>
+<div id="a-result" style="color:#999;font-size:13px;line-height:1.9;white-space:pre-wrap"></div>
+<div style="margin-top:28px;padding:20px;background:rgba(212,175,55,.015);border:1px solid rgba(212,175,55,.06)"><p class="tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.25em;margin-bottom:6px;font-weight:700">Next Step</p><p style="color:#777;font-size:12px;line-height:1.6">This is a preliminary assessment. Our team will follow up within 24 hours with a tailored engagement scope.</p></div>
 </div>
-<div class="reveal-el" style="background:#0a0a0a;border:1px solid rgba(255,255,255,.05);padding:40px">
-<div style="margin-bottom:32px">
-<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.2em">Progress</span><span class="fm" style="font-size:8px;color:#555" id="step-n">1 / 6</span></div>
-<div style="width:100%;height:1px;background:rgba(255,255,255,.1)"><div id="prog-bar" style="height:100%;background:#d4af37;width:16.66%;transition:width .5s"></div></div>
-</div>
+</div></div></div>
 
-<div class="assess-step active" data-s="1"><h3 style="font-size:18px;margin-bottom:20px">Project type?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="DeFi" onclick="pick(this,'projectType')"><span style="font-size:12px">DeFi Protocol</span></div><div class="step-choice" data-v="L1/L2" onclick="pick(this,'projectType')"><span style="font-size:12px">Layer 1 / Layer 2</span></div><div class="step-choice" data-v="GameFi" onclick="pick(this,'projectType')"><span style="font-size:12px">GameFi / Metaverse</span></div><div class="step-choice" data-v="NFT" onclick="pick(this,'projectType')"><span style="font-size:12px">NFT / Creator</span></div><div class="step-choice" data-v="RWA" onclick="pick(this,'projectType')"><span style="font-size:12px">RWA Tokenization</span></div><div class="step-choice" data-v="Exchange" onclick="pick(this,'projectType')"><span style="font-size:12px">Exchange</span></div></div></div>
-
-<div class="assess-step" data-s="2"><h3 style="font-size:18px;margin-bottom:20px">Current stage?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Ideation" onclick="pick(this,'stage')"><span style="font-size:12px">Ideation</span></div><div class="step-choice" data-v="MVP" onclick="pick(this,'stage')"><span style="font-size:12px">MVP / Testnet</span></div><div class="step-choice" data-v="Pre-TGE" onclick="pick(this,'stage')"><span style="font-size:12px">Pre-TGE</span></div><div class="step-choice" data-v="Post-Launch" onclick="pick(this,'stage')"><span style="font-size:12px">Post-Launch</span></div></div></div>
-
-<div class="assess-step" data-s="3"><h3 style="font-size:18px;margin-bottom:20px">Primary challenge?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Tokenomics" onclick="pick(this,'challenge')"><span style="font-size:12px">Tokenomics</span></div><div class="step-choice" data-v="Fundraising" onclick="pick(this,'challenge')"><span style="font-size:12px">Fundraising</span></div><div class="step-choice" data-v="Growth" onclick="pick(this,'challenge')"><span style="font-size:12px">Growth</span></div><div class="step-choice" data-v="Listing" onclick="pick(this,'challenge')"><span style="font-size:12px">Listing</span></div><div class="step-choice" data-v="Community" onclick="pick(this,'challenge')"><span style="font-size:12px">Community</span></div><div class="step-choice" data-v="GTM" onclick="pick(this,'challenge')"><span style="font-size:12px">Full GTM</span></div></div></div>
-
-<div class="assess-step" data-s="4"><h3 style="font-size:18px;margin-bottom:20px">Target market?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Retail" onclick="pick(this,'market')"><span style="font-size:12px">Retail</span></div><div class="step-choice" data-v="Institutional" onclick="pick(this,'market')"><span style="font-size:12px">Institutional</span></div><div class="step-choice" data-v="Developer" onclick="pick(this,'market')"><span style="font-size:12px">Developer</span></div><div class="step-choice" data-v="Hybrid" onclick="pick(this,'market')"><span style="font-size:12px">Hybrid</span></div></div></div>
-
-<div class="assess-step" data-s="5"><h3 style="font-size:18px;margin-bottom:20px">Team size?</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="step-choice" data-v="Solo" onclick="pick(this,'teamSize')"><span style="font-size:12px">Solo</span></div><div class="step-choice" data-v="2-5" onclick="pick(this,'teamSize')"><span style="font-size:12px">2–5</span></div><div class="step-choice" data-v="6-15" onclick="pick(this,'teamSize')"><span style="font-size:12px">6–15</span></div><div class="step-choice" data-v="15+" onclick="pick(this,'teamSize')"><span style="font-size:12px">15+</span></div></div></div>
-
-<div class="assess-step" data-s="6"><h3 style="font-size:18px;margin-bottom:20px">Funding & email</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px"><div class="step-choice" data-v="Bootstrapped" onclick="pick(this,'funding')"><span style="font-size:12px">Bootstrapped</span></div><div class="step-choice" data-v="Pre-Seed" onclick="pick(this,'funding')"><span style="font-size:12px">Pre-Seed</span></div><div class="step-choice" data-v="Seed" onclick="pick(this,'funding')"><span style="font-size:12px">Seed</span></div><div class="step-choice" data-v="Series A+" onclick="pick(this,'funding')"><span style="font-size:12px">Series A+</span></div></div><label style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:#555;margin-bottom:8px">Email</label><input type="email" id="a-email" style="width:100%;background:#000;border:1px solid rgba(255,255,255,.1);padding:12px;color:#fff;font-size:14px;outline:none" placeholder="founder@protocol.io"><button onclick="runAssess()" class="gold-btn" style="width:100%;padding:12px;font-size:10px;text-transform:uppercase;letter-spacing:.2em;margin-top:16px;cursor:pointer"><span id="a-btn-t">Generate Assessment</span></button></div>
-
-<div id="a-load" style="display:none;text-align:center;padding:32px 0;margin-top:32px"><p class="fm" style="color:#555;font-size:10px">Applying strategic frameworks...</p></div>
-<div id="a-out" style="display:none;margin-top:32px;padding-top:32px;border-top:1px solid rgba(212,175,55,.15)">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px"><div style="width:24px;height:24px;border:1px solid #d4af37;display:flex;align-items:center;justify-content:center;color:#d4af37;font-family:'Cinzel',serif;font-size:10px;font-weight:700">C</div><div><p style="font-size:12px;font-weight:700">Intelligence Engine™</p><p class="fm" style="font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.15em">Preliminary Assessment</p></div></div>
-<div id="a-result" style="color:#999;font-size:12px;line-height:1.8;white-space:pre-wrap"></div>
-<div style="margin-top:24px;padding:16px;background:rgba(212,175,55,.02);border:1px solid rgba(212,175,55,.08)"><p class="tg" style="font-size:8px;text-transform:uppercase;letter-spacing:.2em;margin-bottom:4px;font-weight:700">Next Step</p><p style="color:#888;font-size:12px">Our team follows up within 24 hours.</p></div>
-</div>
-</div>
-</div>
+<!-- ==================== CAREERS ==================== -->
+<div style="background:#080808;border-top:1px solid rgba(255,255,255,.03);padding:100px 24px;text-align:center">
+<div class="rv"><h2 style="font-size:clamp(22px,3vw,34px);margin-bottom:16px">Join the <span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Elite</span></h2><p style="color:#555;font-size:14px;max-width:480px;margin:0 auto 28px;line-height:1.7">We hire the top 1% of talent in Web3.</p><a href="careers.html" class="tg hover-link" style="font-size:10px;text-transform:uppercase;letter-spacing:.25em;text-decoration:none">View Positions →</a></div>
 </div>
 
-<!-- ============================================================ -->
-<!-- CAREERS                                                       -->
-<!-- ============================================================ -->
-<div style="background:#080808;border-top:1px solid rgba(255,255,255,.04);padding:96px 24px;text-align:center">
-<div class="reveal-el">
-<h2 style="font-size:clamp(20px,3vw,32px);margin-bottom:16px">Join the <span class="tg" style="font-style:italic;font-family:'Cinzel',serif">Elite</span></h2>
-<p style="color:#555;font-size:14px;max-width:500px;margin:0 auto 24px">We hire the top 1% of talent in Web3.</p>
-<a href="careers.html" class="tg" style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;text-decoration:none;border-bottom:1px solid rgba(212,175,55,.3);padding-bottom:2px">View Positions →</a>
-</div>
-</div>
-
-<!-- ============================================================ -->
-<!-- FOOTER                                                        -->
-<!-- ============================================================ -->
-<div style="background:#020202;border-top:1px solid rgba(255,255,255,.04);padding:80px 24px 40px">
+<!-- ==================== FOOTER ==================== -->
+<div style="background:#020202;border-top:1px solid rgba(255,255,255,.03);padding:80px 24px 40px">
 <div style="max-width:1200px;margin:0 auto">
-<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;padding-bottom:56px;border-bottom:1px solid rgba(255,255,255,.04);margin-bottom:56px">
-<div style="max-width:350px"><a href="#" style="font-size:20px;font-weight:700;letter-spacing:.3em;color:#fff;text-transform:uppercase;font-family:'Cinzel',serif;text-decoration:none;display:block;margin-bottom:16px">Crypvorex</a><p style="color:#555;font-size:12px;line-height:1.7">The leading strategy consultancy for the decentralized economy.</p></div>
-<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:12px">Intelligence Brief</h4><form id="nl-form" style="display:flex;border:1px solid rgba(255,255,255,.1);padding:4px;max-width:300px"><input type="email" id="nl-email" placeholder="Email" style="background:transparent;border:none;color:#fff;padding:8px 12px;outline:none;width:100%;font-size:12px" required><button type="submit" style="background:#fff;color:#000;padding:8px 20px;font-weight:700;font-size:9px;text-transform:uppercase;border:none;cursor:pointer">Join</button></form><div id="nl-res" style="display:none;margin-top:8px;padding:8px;background:rgba(212,175,55,.02);border:1px solid rgba(212,175,55,.08);max-width:300px"><p id="nl-brief" style="color:#777;font-size:10px;line-height:1.6"></p></div></div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;padding-bottom:56px;border-bottom:1px solid rgba(255,255,255,.03);margin-bottom:56px">
+<div style="max-width:320px"><a href="#" style="font-size:20px;font-weight:700;letter-spacing:.35em;color:#fff;text-transform:uppercase;font-family:'Cinzel',serif;text-decoration:none;display:block;margin-bottom:16px">Crypvorex</a><p style="color:#444;font-size:12px;line-height:1.7">The leading strategy consultancy for the decentralized economy.</p></div>
+<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:14px">Intelligence Brief</h4><form id="nl-form" style="display:flex;border:1px solid rgba(255,255,255,.08);padding:4px;max-width:280px;transition:border-color .3s" onfocus="this.style.borderColor='#d4af37'"><input type="email" id="nl-email" placeholder="Email" style="background:transparent;border:none;color:#fff;padding:10px 14px;outline:none;width:100%;font-size:12px" required><button type="submit" style="background:#fff;color:#000;padding:10px 22px;font-weight:700;font-size:9px;text-transform:uppercase;border:none;cursor:pointer;transition:background .3s" onmouseover="this.style.background='#d4af37'" onmouseout="this.style.background='#fff'">Join</button></form><div id="nl-res" style="display:none;margin-top:10px;padding:10px;background:rgba(212,175,55,.015);border:1px solid rgba(212,175,55,.06);max-width:280px"><p id="nl-brief" style="color:#666;font-size:10px;line-height:1.7"></p></div></div>
 </div>
-<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:40px;margin-bottom:56px">
-<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Capabilities</h4><div style="display:flex;flex-direction:column;gap:12px"><a href="capabilities.html#defi" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">DeFi</a><a href="capabilities.html#tokenomics" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Tokenomics</a><a href="capabilities.html#nft" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">NFT</a><a href="capabilities.html#growth" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Growth</a></div></div>
-<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Industries</h4><div style="display:flex;flex-direction:column;gap:12px"><a href="industries.html#infrastructure" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">L1/L2</a><a href="industries.html#gamefi" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">GameFi</a><a href="industries.html#rwa" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">RWA</a><a href="industries.html#exchanges" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Exchanges</a></div></div>
-<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Insights</h4><div style="display:flex;flex-direction:column;gap:12px"><a href="insights.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Research</a><a href="case-studies.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Case Studies</a></div></div>
-<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Firm</h4><div style="display:flex;flex-direction:column;gap:12px"><a href="about.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">About</a><a href="founder.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Founder</a><a href="careers.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Careers</a></div></div>
-<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Legal</h4><div style="display:flex;flex-direction:column;gap:12px"><a href="disclaimer.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Disclaimer</a><a href="disclaimer.html" style="color:#555;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Privacy</a></div></div>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:40px;margin-bottom:56px" class="grid-5">
+<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Capabilities</h4><div style="display:flex;flex-direction:column;gap:14px"><a href="capabilities.html#defi" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">DeFi</a><a href="capabilities.html#tokenomics" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Tokenomics</a><a href="capabilities.html#nft" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">NFT</a><a href="capabilities.html#growth" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Growth</a></div></div>
+<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Industries</h4><div style="display:flex;flex-direction:column;gap:14px"><a href="industries.html#infrastructure" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">L1/L2</a><a href="industries.html#gamefi" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">GameFi</a><a href="industries.html#rwa" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">RWA</a><a href="industries.html#exchanges" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Exchanges</a></div></div>
+<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Insights</h4><div style="display:flex;flex-direction:column;gap:14px"><a href="insights.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Research</a><a href="case-studies.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Cases</a></div></div>
+<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Firm</h4><div style="display:flex;flex-direction:column;gap:14px"><a href="about.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">About</a><a href="founder.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Founder</a><a href="careers.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Careers</a></div></div>
+<div><h4 style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px">Legal</h4><div style="display:flex;flex-direction:column;gap:14px"><a href="disclaimer.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Disclaimer</a><a href="disclaimer.html" class="hover-link" style="color:#444;font-size:10px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none">Privacy</a></div></div>
 </div>
-<div style="border-top:1px solid rgba(255,255,255,.04);padding-top:24px;display:flex;justify-content:space-between;align-items:center">
-<p style="color:#333;font-size:9px;text-transform:uppercase;letter-spacing:.2em">© 2026 Crypvorex Consulting Group. All Rights Reserved.</p>
-<div style="display:flex;align-items:center;gap:12px"><span class="fm" style="font-size:8px;color:#444" id="f-status">MARKETS: LOADING</span><span style="width:4px;height:4px;border-radius:50%;background:#444" id="f-dot"></span></div>
+<div style="border-top:1px solid rgba(255,255,255,.03);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+<p style="color:#222;font-size:9px;text-transform:uppercase;letter-spacing:.2em">© 2026 Crypvorex Consulting Group. All Rights Reserved.</p>
+<div style="display:flex;align-items:center;gap:12px"><span class="fm" style="font-size:8px;color:#333" id="f-status">MARKETS: LOADING</span><span style="width:5px;height:5px;border-radius:50%;background:#333" id="f-dot"></span></div>
 </div>
 </div>
 </div>
 
-<!-- RESPONSIVE -->
-<style>
-@media(max-width:1024px){
-#desk-nav{display:none !important}
-#mob-btn{display:block !important}
-}
-@media(max-width:768px){
-[style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr !important}
-[style*="grid-template-columns:repeat(4"]{grid-template-columns:repeat(2,1fr) !important}
-[style*="grid-template-columns:repeat(5"]{grid-template-columns:repeat(2,1fr) !important}
-[style*="display:flex;gap:80px"]{flex-direction:column !important}
-[style*="min-width:400px"]{min-width:0 !important}
-}
-</style>
-
+<!-- ==================== SCRIPTS ==================== -->
 <script src="gemini-engine.js"></script>
 <script>
-// Console
-console.log('%c\n CRYPVOREX TERMINAL v4.2\n If you\'re reading this → crypvorex.com/careers\n','color:#d4af37;font-family:monospace');
+// === CONSOLE ===
+console.log('%c\n CRYPVOREX TERMINAL v4.2\n → crypvorex.com/careers\n','color:#d4af37;font-family:monospace;font-size:12px');
 
-// Loader
+// === LOADER ===
 window.addEventListener('load',function(){
-setTimeout(function(){document.getElementById('loader-line').classList.add('go')},100);
-setTimeout(function(){document.getElementById('loader-text').classList.add('go')},400);
-setTimeout(function(){document.getElementById('loader-sub').classList.add('go')},800);
-setTimeout(function(){var l=document.getElementById('loader');l.classList.add('done');setTimeout(function(){l.style.display='none'},800)},2200);
+setTimeout(function(){document.getElementById('loader-line').classList.add('go')},200);
+setTimeout(function(){document.getElementById('loader-text').classList.add('go')},500);
+setTimeout(function(){document.getElementById('loader-sub').classList.add('go')},900);
+setTimeout(function(){document.getElementById('loader-ver').classList.add('go')},1300);
+setTimeout(function(){var l=document.getElementById('loader');l.classList.add('done');setTimeout(function(){l.style.display='none'},1000)},2800);
 });
 
-// Encrypted reveal
-var eC='█▓▒░╬╠╣╦╩';
-function scramble(el){var t=el.dataset.target,it=0;var iv=setInterval(function(){el.textContent=t.split('').map(function(c,i){return i<it?t[i]:eC[Math.floor(Math.random()*eC.length)]}).join('');if(it>=t.length)clearInterval(iv);it+=1/3},40);}
+// === DATA RAIN CANVAS ===
+var rc=document.getElementById('rain-canvas'),rx=rc.getContext('2d');
+function rRain(){rc.width=window.innerWidth;rc.height=window.innerHeight}
+rRain();window.addEventListener('resize',rRain);
+var rChars='BTCETHSOLDEFIRWANFTDAOTVLYIELDSTAKESWAPBRIDGE01'.split('');
+var rCols=Math.floor(window.innerWidth/22);
+var rDrops=[];for(var i=0;i<rCols;i++)rDrops[i]=Math.floor(Math.random()*rc.height/18);
+setInterval(function(){
+rx.fillStyle='rgba(3,3,3,.06)';rx.fillRect(0,0,rc.width,rc.height);
+rx.fillStyle='#d4af37';rx.font='11px Share Tech Mono';
+for(var i=0;i<rDrops.length;i++){
+rx.fillText(rChars[Math.floor(Math.random()*rChars.length)],i*22,rDrops[i]*18);
+if(rDrops[i]*18>rc.height&&Math.random()>.975)rDrops[i]=0;
+rDrops[i]++;
+}},90);
+
+// === PULSE LINE ===
+var pc=document.getElementById('pulse-canvas'),px=pc.getContext('2d');
+function rPulse(){pc.width=window.innerWidth;pc.height=3}
+rPulse();window.addEventListener('resize',rPulse);
+var pOff=0;
+(function drawPulse(){
+px.clearRect(0,0,pc.width,3);px.beginPath();
+px.strokeStyle='rgba(212,175,55,.12)';px.lineWidth=1;
+for(var x=0;x<pc.width;x++){var y=1.5+Math.sin((x+pOff)*.018)*.8;x===0?px.moveTo(x,y):px.lineTo(x,y)}
+px.stroke();pOff+=1.5;requestAnimationFrame(drawPulse);
+})();
+
+// === HERO PARTICLES ===
+var hc=document.getElementById('hero-particles'),hx=hc.getContext('2d');
+function rHero(){hc.width=hc.parentElement.offsetWidth;hc.height=hc.parentElement.offsetHeight}
+rHero();window.addEventListener('resize',rHero);
+var particles=[];
+for(var i=0;i<60;i++)particles.push({x:Math.random()*2000,y:Math.random()*1200,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+(function drawParticles(){
+hx.clearRect(0,0,hc.width,hc.height);
+for(var i=0;i<particles.length;i++){
+var p=particles[i];
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=hc.width;if(p.x>hc.width)p.x=0;
+if(p.y<0)p.y=hc.height;if(p.y>hc.height)p.y=0;
+hx.beginPath();hx.arc(p.x,p.y,p.r,0,Math.PI*2);
+hx.fillStyle='rgba(212,175,55,.15)';hx.fill();
+// Connect nearby
+for(var j=i+1;j<particles.length;j++){var q=particles[j];var dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<150){hx.beginPath();hx.moveTo(p.x,p.y);hx.lineTo(q.x,q.y);hx.strokeStyle='rgba(212,175,55,'+(1-d/150)*.06+')';hx.stroke()}}
+}
+requestAnimationFrame(drawParticles);
+})();
+
+// === CURSOR GLOW ===
+document.querySelectorAll('.glow-card').forEach(function(c){
+c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),orb=c.querySelector('.glow-follow');if(orb){orb.style.left=(e.clientX-r.left)+'px';orb.style.top=(e.clientY-r.top)+'px'}});
+});
+
+// === ENCRYPTED ===
+var eC='█▓▒░╬╠╣╦╩■□▪';
+function scramble(el){var t=el.dataset.target,it=0;var iv=setInterval(function(){el.textContent=t.split('').map(function(c,i){return i<it?t[i]:eC[Math.floor(Math.random()*eC.length)]}).join('');if(it>=t.length)clearInterval(iv);it+=1/3},35)}
 var eObs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){setTimeout(function(){scramble(e.target)},parseInt(e.target.dataset.delay)||0);eObs.unobserve(e.target)}})},{threshold:.5});
 document.querySelectorAll('.encrypted').forEach(function(el){eObs.observe(el)});
 
-// Reveal
-var rObs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');rObs.unobserve(e.target)}})},{threshold:.08});
-document.querySelectorAll('.reveal-el').forEach(function(el){rObs.observe(el)});
+// === REVEAL ===
+var rObs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');rObs.unobserve(e.target)}})},{threshold:.06});
+document.querySelectorAll('.rv').forEach(function(el){rObs.observe(el)});
 
-// Scroll marker
-var sm=document.getElementById('scroll-marker');
+// === SCROLL MARKER + PROGRESS ===
+var sm=document.getElementById('scroll-marker'),sp=document.getElementById('scroll-progress');
 window.addEventListener('scroll',function(){
 var pct=Math.round(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100);
-sm.style.opacity=pct>5?'1':'0';
+sm.style.opacity=pct>3?'1':'0';
+sp.style.width=pct+'%';
 var m=pct+'%';
 if(pct<25)m+=' // SURFACE';else if(pct<50)m+=' // EXPLORING';else if(pct<75)m+=' // DEEP_DIVE';else m+=' // FOUNDATION';
 sm.textContent=m;
 });
 
-// Market data
+// === MARKET DATA ===
 var SYM={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',cardano:'ADA',polkadot:'DOT'};
 var P={bitcoin:{usd:94231,usd_24h_change:2.4},ethereum:{usd:5452,usd_24h_change:1.8},solana:{usd:245.8,usd_24h_change:5.5},binancecoin:{usd:792,usd_24h_change:-.1},ripple:{usd:1.05,usd_24h_change:3.2},cardano:{usd:.95,usd_24h_change:1.2},polkadot:{usd:12.4,usd_24h_change:-1.5}};
 function fmt(v){if(v>1000)return'$'+v.toLocaleString('en-US',{maximumFractionDigits:0});if(v>1)return'$'+v.toFixed(2);return'$'+v.toFixed(4)}
-function renderTicker(){var items=Object.keys(P).map(function(k){var c=P[k],cl=c.usd_24h_change>=0?'color:#4ade80':'color:#f87171',a=c.usd_24h_change>=0?'▲':'▼';return'<span style="display:inline-flex;align-items:center;margin:0 32px"><span style="color:#d4af37;margin-right:6px;font-weight:700">'+SYM[k]+'</span>'+fmt(c.usd)+'<span style="'+cl+';margin-left:6px;font-size:9px">'+a+' '+Math.abs(c.usd_24h_change).toFixed(2)+'%</span></span>'}).join('');document.getElementById('ticker').innerHTML=items+items+items}
-function s(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
+function se(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
 function sc(id,v,ch){var e=document.getElementById(id);if(e){e.textContent=v;e.style.color=ch>=0?'#4ade80':'#f87171'}}
+function renderTicker(){var items=Object.keys(P).map(function(k){var c=P[k],cl=c.usd_24h_change>=0?'color:#4ade80':'color:#f87171',a=c.usd_24h_change>=0?'▲':'▼';return'<span style="display:inline-flex;align-items:center;margin:0 32px"><span style="color:#d4af37;margin-right:8px;font-weight:700">'+SYM[k]+'</span>'+fmt(c.usd)+'<span style="'+cl+';margin-left:8px;font-size:9px">'+a+' '+Math.abs(c.usd_24h_change).toFixed(2)+'%</span></span>'}).join('');document.getElementById('ticker').innerHTML=items+items+items}
 function updateTerm(){
-if(P.bitcoin){s('t-btc',fmt(P.bitcoin.usd));sc('t-btc-c',(P.bitcoin.usd_24h_change>=0?'▲':'▼')+' '+Math.abs(P.bitcoin.usd_24h_change).toFixed(2)+'%',P.bitcoin.usd_24h_change)}
-if(P.ethereum){s('t-eth',fmt(P.ethereum.usd));sc('t-eth-c',(P.ethereum.usd_24h_change>=0?'▲':'▼')+' '+Math.abs(P.ethereum.usd_24h_change).toFixed(2)+'%',P.ethereum.usd_24h_change)}
-if(P.solana){s('t-sol',fmt(P.solana.usd));sc('t-sol-c',(P.solana.usd_24h_change>=0?'▲':'▼')+' '+Math.abs(P.solana.usd_24h_change).toFixed(2)+'%',P.solana.usd_24h_change)}
-var ch=P.bitcoin?P.bitcoin.usd_24h_change:0;
-var st=ch>2?'RISK-ON':ch<-2?'RISK-OFF':'NEUTRAL';
-s('f-status','MARKETS: '+st);
-var d=document.getElementById('f-dot');if(d)d.style.background=ch>0?'#4ade80':ch<0?'#f87171':'#666';
+if(P.bitcoin){se('t-btc',fmt(P.bitcoin.usd));sc('t-btc-c',(P.bitcoin.usd_24h_change>=0?'▲':'▼')+' '+Math.abs(P.bitcoin.usd_24h_change).toFixed(2)+'%',P.bitcoin.usd_24h_change)}
+if(P.ethereum){se('t-eth',fmt(P.ethereum.usd));sc('t-eth-c',(P.ethereum.usd_24h_change>=0?'▲':'▼')+' '+Math.abs(P.ethereum.usd_24h_change).toFixed(2)+'%',P.ethereum.usd_24h_change)}
+if(P.solana){se('t-sol',fmt(P.solana.usd));sc('t-sol-c',(P.solana.usd_24h_change>=0?'▲':'▼')+' '+Math.abs(P.solana.usd_24h_change).toFixed(2)+'%',P.solana.usd_24h_change)}
+var ch=P.bitcoin?P.bitcoin.usd_24h_change:0;var st=ch>2?'RISK-ON':ch<-2?'RISK-OFF':'NEUTRAL';
+se('f-status','MARKETS: '+st);var d=document.getElementById('f-dot');if(d)d.style.background=ch>0?'#4ade80':ch<0?'#f87171':'#555';
 }
-setInterval(function(){s('t-time',new Date().toUTCString().split(' ')[4]+' UTC')},1000);
+setInterval(function(){se('t-time',new Date().toUTCString().split(' ')[4]+' UTC')},1000);
 function fetchP(){fetch('https://api.coingecko.com/api/v3/simple/price?ids='+Object.keys(SYM).join(',')+'&vs_currencies=usd&include_24hr_change=true').then(function(r){return r.json()}).then(function(d){P=d}).catch(function(){}).finally(function(){renderTicker();updateTerm()})}
 function simF(){for(var k in P){P[k].usd+=(Math.random()-.5)*(P[k].usd*.002);if(Math.random()>.92)P[k].usd_24h_change+=(Math.random()-.5)}renderTicker();updateTerm()}
-function fetchD(){
-Promise.allSettled([fetch('https://api.llama.fi/v2/historicalChainTvl').then(function(r){return r.json()}),fetch('https://api.alternative.me/fng/').then(function(r){return r.json()}),fetch('https://api.coingecko.com/api/v3/global').then(function(r){return r.json()})]).then(function(res){
-if(res[0].status==='fulfilled'&&res[0].value.length){var l=res[0].value[res[0].value.length-1];if(l&&l.tvl)s('t-tvl','$'+Math.round(l.tvl/1e9)+'B')}else s('t-tvl','$187B');
-if(res[1].status==='fulfilled'&&res[1].value.data){var f=res[1].value.data[0];if(f){s('t-fg',f.value);s('t-fg-l',f.value_classification)}}else{s('t-fg','72');s('t-fg-l','Greed')}
-if(res[2].status==='fulfilled'&&res[2].value.data){var g=res[2].value.data;s('t-dom',(g.market_cap_percentage.btc||54).toFixed(1)+'%');s('t-mcap','$'+(g.total_market_cap.usd/1e12).toFixed(2)+'T')}else{s('t-dom','54.2%');s('t-mcap','$3.2T')}
-s('t-gas',Math.floor(Math.random()*20+5)+' Gwei');
-}).catch(function(){s('t-tvl','$187B');s('t-fg','72');s('t-fg-l','Greed');s('t-dom','54.2%');s('t-gas','12 Gwei');s('t-mcap','$3.2T')})}
+function fetchD(){Promise.allSettled([fetch('https://api.llama.fi/v2/historicalChainTvl').then(function(r){return r.json()}),fetch('https://api.alternative.me/fng/').then(function(r){return r.json()}),fetch('https://api.coingecko.com/api/v3/global').then(function(r){return r.json()})]).then(function(res){if(res[0].status==='fulfilled'&&res[0].value.length){var l=res[0].value[res[0].value.length-1];if(l&&l.tvl)se('t-tvl','$'+Math.round(l.tvl/1e9)+'B')}else se('t-tvl','$187B');if(res[1].status==='fulfilled'&&res[1].value.data){var f=res[1].value.data[0];if(f){se('t-fg',f.value);se('t-fg-l',f.value_classification)}}else{se('t-fg','72');se('t-fg-l','Greed')}if(res[2].status==='fulfilled'&&res[2].value.data){var g=res[2].value.data;se('t-dom',(g.market_cap_percentage.btc||54).toFixed(1)+'%');se('t-mcap','$'+(g.total_market_cap.usd/1e12).toFixed(2)+'T')}else{se('t-dom','54.2%');se('t-mcap','$3.2T')}se('t-gas',Math.floor(Math.random()*20+5)+' Gwei')}).catch(function(){se('t-tvl','$187B');se('t-fg','72');se('t-fg-l','Greed');se('t-dom','54.2%');se('t-gas','12 Gwei');se('t-mcap','$3.2T')})}
 fetchP();fetchD();setInterval(fetchP,60000);setInterval(simF,3500);setInterval(fetchD,120000);
 
-// AI
-function aiSent(){if(typeof CrypvorexAI==='undefined')return;var sp={};for(var k in P)sp[SYM[k]]={p:fmt(P[k].usd),ch:(P[k].usd_24h_change||0).toFixed(1)+'%'};CrypvorexAI.sentiment(sp).then(function(r){if(r){var e=document.getElementById('ai-sent');e.textContent=r;e.style.color='#aaa'}}).catch(function(){})}
+// === AI ===
+function aiSent(){if(typeof CrypvorexAI==='undefined')return;var sp={};for(var k in P)sp[SYM[k]]={p:fmt(P[k].usd),ch:(P[k].usd_24h_change||0).toFixed(1)+'%'};CrypvorexAI.sentiment(sp).then(function(r){if(r){var e=document.getElementById('ai-sent');e.textContent=r;e.style.color='#999'}}).catch(function(){})}
 function aiThes(){if(typeof CrypvorexAI==='undefined')return;CrypvorexAI.thesis().then(function(r){if(r)document.getElementById('ai-thesis').textContent=r}).catch(function(){})}
 function aiHero(){if(typeof CrypvorexAI==='undefined')return;CrypvorexAI.heroLine().then(function(r){if(r)document.getElementById('hero-sub').textContent=r}).catch(function(){})}
-setTimeout(aiSent,5000);setTimeout(aiThes,7000);setTimeout(aiHero,10000);
-setInterval(aiSent,180000);setInterval(aiThes,300000);
+setTimeout(aiSent,5000);setTimeout(aiThes,7000);setTimeout(aiHero,12000);setInterval(aiSent,180000);setInterval(aiThes,300000);
 
-// CMD+K
+// === CMD+K ===
 var cmdO=document.getElementById('cmd-overlay'),cmdI=document.getElementById('cmd-input'),cmdAB=document.getElementById('cmd-ai-box'),cmdAO=document.getElementById('cmd-ai-out');var cmdT;
-function openCmd(){cmdO.classList.add('open');setTimeout(function(){cmdI.focus()},100)}
+function openCmd(){cmdO.classList.add('open');setTimeout(function(){cmdI.focus()},150)}
 function closeCmd(){cmdO.classList.remove('open');cmdI.value='';cmdAB.style.display='none'}
 document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();cmdO.classList.contains('open')?closeCmd():openCmd()}if(e.key==='Escape')closeCmd()});
 document.getElementById('cmd-btn').addEventListener('click',openCmd);
 cmdO.addEventListener('click',function(e){if(e.target===cmdO)closeCmd()});
-cmdI.addEventListener('input',function(e){clearTimeout(cmdT);var q=e.target.value.trim();if(q.length<2){cmdAB.style.display='none';return}cmdT=setTimeout(function(){if(typeof CrypvorexAI!=='undefined'){cmdAB.style.display='block';cmdAO.textContent='Analyzing...';CrypvorexAI.cmdQuery(q).then(function(r){cmdAO.textContent=r||'Try BTC, DeFi, thesis...'}).catch(function(){cmdAO.textContent='Try BTC, DeFi, thesis...'})}},600)});
+cmdI.addEventListener('input',function(e){clearTimeout(cmdT);var q=e.target.value.trim();if(q.length<2){cmdAB.style.display='none';return}cmdT=setTimeout(function(){if(typeof CrypvorexAI!=='undefined'){cmdAB.style.display='block';cmdAO.textContent='Analyzing...';CrypvorexAI.cmdQuery(q).then(function(r){cmdAO.textContent=r||'Try: BTC, DeFi, thesis, tokenomics'}).catch(function(){cmdAO.textContent='Intelligence unavailable.'})}},600)});
 
-// Assessment
+// === ASSESSMENT ===
 var AD={},curS=1;
-function pick(el,f){var sibs=el.parentElement.querySelectorAll('.step-choice');for(var i=0;i<sibs.length;i++)sibs[i].classList.remove('picked');el.classList.add('picked');AD[f]=el.dataset.v;if(curS<6)setTimeout(function(){curS++;goStep(curS)},350)}
+function pick(el,f){var sibs=el.parentElement.querySelectorAll('.step-choice');for(var i=0;i<sibs.length;i++)sibs[i].classList.remove('picked');el.classList.add('picked');AD[f]=el.dataset.v;if(curS<6)setTimeout(function(){curS++;goStep(curS)},400)}
 function goStep(n){var steps=document.querySelectorAll('.assess-step');for(var i=0;i<steps.length;i++)steps[i].classList.remove('active');var t=document.querySelector('.assess-step[data-s="'+n+'"]');if(t)t.classList.add('active');document.getElementById('step-n').textContent=n+' / 6';document.getElementById('prog-bar').style.width=(n/6*100)+'%'}
 function runAssess(){
 if(!AD.funding){alert('Select funding status');return}
-var btn=document.getElementById('a-btn-t'),ld=document.getElementById('a-load'),out=document.getElementById('a-out'),res=document.getElementById('a-result');
-btn.textContent='Analyzing...';ld.style.display='block';out.style.display='none';
-AD.email=document.getElementById('a-email').value;
-var done=function(txt){ld.style.display='none';out.style.display='block';res.textContent=txt;btn.textContent='Generated';out.scrollIntoView({behavior:'smooth'})};
-if(typeof CrypvorexAI!=='undefined'){CrypvorexAI.assess(AD).then(function(r){done(r||fallback())}).catch(function(){done(fallback())})}else done(fallback());
+document.getElementById('a-btn-t').textContent='Analyzing...';document.getElementById('a-load').style.display='block';document.getElementById('a-out').style.display='none';AD.email=document.getElementById('a-email').value;
+var done=function(txt){document.getElementById('a-load').style.display='none';document.getElementById('a-out').style.display='block';document.getElementById('a-result').textContent=txt;document.getElementById('a-btn-t').textContent='Generated';document.getElementById('a-out').scrollIntoView({behavior:'smooth'})};
+if(typeof CrypvorexAI!=='undefined'){CrypvorexAI.assess(AD).then(function(r){done(r||fb())}).catch(function(){done(fb())})}else done(fb());
 }
-function fallback(){return'READINESS: 6/10\n\nProject ('+AD.projectType+', '+AD.stage+', '+AD.funding+') shows moderate readiness.\n\nPRIORITIES:\n1. '+AD.challenge+' needs intervention\n2. '+AD.market+' positioning needs work\n3. Team ('+AD.teamSize+') may need augmentation\n\nRECOMMENDED: Strategic Tier\n\nOur team follows up within 24 hours.'}
+function fb(){return'READINESS: 6/10\n\nProject ('+AD.projectType+', '+AD.stage+', '+AD.funding+') shows moderate readiness.\n\nPRIORITIES:\n1. '+AD.challenge+' needs intervention\n2. '+AD.market+' positioning needs differentiation\n3. Team ('+AD.teamSize+') may need augmentation\n\nRECOMMENDED: Strategic Tier\n\nRISKS:\n• Timeline pressure on deliverables\n• Market demands accelerated execution\n\nOur team follows up within 24 hours.'}
 
-// Newsletter
-document.getElementById('nl-form').addEventListener('submit',function(e){e.preventDefault();var r=document.getElementById('nl-res'),b=document.getElementById('nl-brief');r.style.display='block';b.textContent='Generating...';if(typeof CrypvorexAI!=='undefined'){CrypvorexAI.newsletterBrief().then(function(t){b.textContent=t||'✓ Subscribed. Brief in 24h.'}).catch(function(){b.textContent='✓ Subscribed.'})}else b.textContent='✓ Subscribed. Brief in 24h.'});
+// === NEWSLETTER ===
+document.getElementById('nl-form').addEventListener('submit',function(e){e.preventDefault();var r=document.getElementById('nl-res'),b=document.getElementById('nl-brief');r.style.display='block';b.textContent='Generating brief...';if(typeof CrypvorexAI!=='undefined'){CrypvorexAI.newsletterBrief().then(function(t){b.textContent=t||'✓ Subscribed.'}).catch(function(){b.textContent='✓ Subscribed.'})}else b.textContent='✓ Subscribed. Brief in 24h.'});
 
-// Login
+// === LOGIN ===
 var lb=document.getElementById('login-box');
-function openLogin(){lb.classList.add('open')}
-function closeLogin(){lb.classList.remove('open');document.getElementById('login-form').reset();document.getElementById('login-err').style.display='none'}
-document.getElementById('nav-portal').addEventListener('click',openLogin);
-document.getElementById('mob-portal').addEventListener('click',function(){closeMob();openLogin()});
-document.getElementById('login-close').addEventListener('click',closeLogin);
-lb.addEventListener('click',function(e){if(e.target===lb)closeLogin()});
-document.getElementById('req-acc').addEventListener('click',function(){closeLogin()});
+document.getElementById('nav-portal').addEventListener('click',function(){lb.classList.add('open')});
+document.getElementById('mob-portal').addEventListener('click',function(){closeMob();lb.classList.add('open')});
+document.getElementById('login-close').addEventListener('click',function(){lb.classList.remove('open');document.getElementById('login-form').reset();document.getElementById('login-err').style.display='none'});
+lb.addEventListener('click',function(e){if(e.target===lb){lb.classList.remove('open')}});
+document.getElementById('req-acc').addEventListener('click',function(){lb.classList.remove('open')});
 document.getElementById('login-form').addEventListener('submit',function(e){e.preventDefault();var b=document.getElementById('l-btn-t'),er=document.getElementById('login-err');b.textContent='Verifying...';er.style.display='none';setTimeout(function(){b.textContent='Authenticate';er.style.display='block'},1500)});
 
-// Mobile
+// === MOBILE ===
 var mn=document.getElementById('mob-nav');
 function openMob(){mn.classList.add('open');document.body.style.overflow='hidden'}
 function closeMob(){mn.classList.remove('open');document.body.style.overflow=''}
 document.getElementById('mob-btn').addEventListener('click',openMob);
 document.getElementById('mob-close').addEventListener('click',closeMob);
-var mls=document.querySelectorAll('.mob-lnk');for(var i=0;i<mls.length;i++){mls[i].addEventListener('click',function(){if(!this.id||this.id!=='mob-portal')closeMob()})}
+var mls=document.querySelectorAll('.mob-lnk');for(var i=0;i<mls.length;i++){(function(el){el.addEventListener('click',function(){if(!el.id||el.id!=='mob-portal')closeMob()})})(mls[i])}
 
-// Smooth scroll
+// === SMOOTH SCROLL ===
 document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){if(this.id==='req-acc')return;e.preventDefault();var id=this.getAttribute('href');if(id==='#')return;var t=document.querySelector(id);if(t)t.scrollIntoView({behavior:'smooth'})})});
 </script>
 </body>
